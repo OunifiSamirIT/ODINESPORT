@@ -1,0 +1,19 @@
+module.exports = (sequelize, Sequelize) => {
+  const Commentaires = sequelize.define("commentaires", {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    description: {
+      type: Sequelize.STRING,
+    },
+    articleId: {
+      type: Sequelize.INTEGER,
+    },
+    userId: {
+      type: Sequelize.INTEGER,
+    },
+  });
+  return Commentaires;
+};
