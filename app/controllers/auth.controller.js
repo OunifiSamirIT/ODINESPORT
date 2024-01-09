@@ -47,6 +47,10 @@ exports.signup = (req, res) => {
               iduser: user.id,
               height: req.body.height,
               weight: req.body.weight,
+              strongSkill: req.body.strongSkill,
+              positionPlay: req.body.positionPlay,
+              positionSecond: req.body.positionSecond,
+              skillsInProfile: req.body.skillsInProfile,
             }).then(console.log('player insere'))
           }
           if (profil === 'coach') {

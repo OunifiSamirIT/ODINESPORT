@@ -6,7 +6,18 @@ module.exports = (sequelize, Sequelize) => {
     weight: {
       type: Sequelize.STRING,
     },
-   
+    strongSkill: {
+      type: Sequelize.STRING,
+    },
+    positionPlay: {
+      type: Sequelize.STRING,
+    },
+    positionSecond: {
+      type: Sequelize.STRING,
+    },
+    skillsInProfile: {
+      type: Sequelize.STRING,
+    },
     
   })
   return Player
