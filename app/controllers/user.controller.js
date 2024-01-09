@@ -18,6 +18,7 @@ const getPagingData = (data, page, limit) => {
   return { totalItems, rows, totalPages, currentPage }
 }
 
+//info of user
 exports.getUserInfo = (req, res) => {
   const id = req.params.id
   User.findByPk(id, {
