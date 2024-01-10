@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Agent = sequelize.define('agents', {
+  const Other = sequelize.define('others', {
     profession: {
       type: Sequelize.STRING,
     },
@@ -7,5 +7,5 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
   })
-  return Agent
+  return Other
 }

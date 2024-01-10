@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 var corsOptions = {
-  origin: 'http://localhost:9999',
+  origin: 'http://localhost:5173',
 }
 app.use(cors(corsOptions))
 // parse requests of content-type - application/json
@@ -33,32 +33,25 @@ function initial() {
   })
   Role.create({
     id: 4,
-    name: 'manager',
-  })
-  Role.create({
-    id: 5,
     name: 'agent',
   })
   Role.create({
-    id: 6,
+    id: 5,
     name: 'scout',
   })
   Role.create({
-    id: 7,
-    name: 'club',
-  })
-  Role.create({
-    id: 8,
+    id: 6,
     name: 'advertiser',
   })
   Role.create({
-    id: 9,
+    id: 7,
     name: 'other',
   })
   Role.create({
-    id: 10,
+    id: 8,
     name: 'user',
   })
+ 
 }
 
 app.get('/', (req, res) => {

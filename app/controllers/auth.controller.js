@@ -19,12 +19,20 @@ var bcrypt = require('bcryptjs')
 
 exports.signup = (req, res) => {
   // Save User to Database
+ // var imgsrc = "http://localhost:8088/uploads/" + req.file.filename;
+
   User.create({
     nom: req.body.nom,
     prenom: req.body.prenom,
+    date_naissance: req.body.date_naissance,
+    gender: req.body.gender,
+    nationality: req.body.nationality,
+    countryresidence: req.body.countryresidence,
+    cityresidence: req.body.cityresidence,
     tel: req.body.tel,
     email: req.body.email,
     login: req.body.login,
+    // image: imgsrc,
     profil: req.body.profil,
     password: bcrypt.hashSync(req.body.password, 8),
   })
@@ -58,7 +66,32 @@ exports.signup = (req, res) => {
             Coach.create({
               iduser: user.id,
               totalTeam: req.body.totalTeam,
+              countryCoachedIn: req.body.countryCoachedIn,
+              skills: req.body.skills,
+              
             }).then(console.log('coach insere'))
+          }
+          if (profil === 'agent') {
+            console.log('userid : ', user.id)
+
+            // Check the value of typeresponsable
+            if (req.body.typeresponsable === 'club') {
+              Agent.create({
+                iduser: user.id,
+                totalCareerTransfers: req.body.totalCareerTransfers,
+                clubCovered: req.body.clubCovered,
+                skills: req.body.skills,
+              }).then(console.log('agent insere'))
+            } else if (req.body.typeresponsable === 'players') {
+              Agent.create({
+                iduser: user.id,
+                totalCareerTransfers: req.body.totalCareerTransfers,
+                typeresponsable: req.body.typeresponsable,
+                
+                totalPlayer: req.body.totalPlayer,
+                skills: req.body.skills,
+              }).then(console.log('agent insere'))
+            }
           }
           // completer les autres profil et changer la fonction par switch a la place de if
           // else {
@@ -73,7 +106,7 @@ exports.signup = (req, res) => {
           })
         })
       } else {
-        user.setRoles([9]).then(() => {
+        user.setRoles([7]).then(() => {
           res.send({ message: 'User was registered successfully!' })
         })
       }

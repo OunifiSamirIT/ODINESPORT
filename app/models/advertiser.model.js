@@ -3,6 +3,15 @@ module.exports = (sequelize, Sequelize) => {
     entreprise: {
       type: Sequelize.STRING,
     },
+    advertisingCampaigns: {
+      type: Sequelize.STRING,
+    },
+    targetAudience: {
+      type: Sequelize.STRING,
+    },
+    budget: {
+      type: Sequelize.STRING,
+    },
   })
   return Advertiser
 }

@@ -9,9 +9,6 @@ module.exports = (sequelize, Sequelize) => {
     date_naissance: {
       type: Sequelize.DATE,
     },
-    cin: {
-      type: Sequelize.INTEGER,
-    },
     tel: {
       type: Sequelize.INTEGER,
     },
@@ -22,6 +19,18 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     password: {
+      type: Sequelize.STRING,
+    },
+    gender: {
+      type: Sequelize.STRING,
+    },
+    nationality: {
+      type: Sequelize.STRING,
+    },
+    countryresidence: {
+      type: Sequelize.STRING,
+    },
+    cityresidence: {
       type: Sequelize.STRING,
     },
     profil: {

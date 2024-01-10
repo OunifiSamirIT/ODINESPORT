@@ -18,10 +18,8 @@ db.sequelize = sequelize
 db.user = require('./user.model.js')(sequelize, Sequelize)
 db.player = require('./player.model.js')(sequelize, Sequelize)
 db.coach = require('./coach.model.js')(sequelize, Sequelize)
-db.manager = require('./manager.model.js')(sequelize, Sequelize)
 db.agent = require('./agent.model.js')(sequelize, Sequelize)
 db.scout = require('./scout.model.js')(sequelize, Sequelize)
-db.club = require('./club.model.js')(sequelize, Sequelize)
 db.advertiser = require('./advertiser.model.js')(sequelize, Sequelize)
 db.other = require('./other.model.js')(sequelize, Sequelize)
 
@@ -77,11 +75,7 @@ db.user.hasMany(db.coach, {
 })
 db.coach.belongsTo(db.user, { foreignKey: 'iduser' })
 
-db.user.hasMany(db.manager, {
-  as: 'manager_user',
-  foreignKey: 'iduser',
-})
-db.manager.belongsTo(db.user, { foreignKey: 'iduser' })
+
 
 db.user.hasMany(db.agent, {
   as: 'agent_user',
@@ -95,11 +89,7 @@ db.user.hasMany(db.scout, {
 })
 db.scout.belongsTo(db.user, { foreignKey: 'iduser' })
 
-db.user.hasMany(db.club, {
-  as: 'club_user',
-  foreignKey: 'iduser',
-})
-db.club.belongsTo(db.user, { foreignKey: 'iduser' })
+
 
 db.user.hasMany(db.advertiser, {
   as: 'advertiser_user',
@@ -118,10 +108,8 @@ db.ROLES = [
   'admin',
   'player',
   'coach',
-  'manager',
   'agent',
   'scout',
-  'club',
   'advertiser',
   'other',
 ]
