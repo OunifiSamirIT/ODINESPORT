@@ -15,5 +15,11 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
     },
   });
+
+  Commentaires.hasMany(sequelize.models.Reply, {
+    foreignKey: 'commentaireId',
+    onDelete: 'CASCADE',
+  });
+
   return Commentaires;
 };

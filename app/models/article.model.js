@@ -1,3 +1,4 @@
+
 module.exports = (sequelize, Sequelize) => {
   const Article = sequelize.define("article", {
     titre: {
@@ -15,6 +16,16 @@ module.exports = (sequelize, Sequelize) => {
     type: {
       type: Sequelize.STRING,
     },
+    userId: {  // Add this foreign key
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'users',  // Assuming 'users' is the name of your 'user' table
+        key: 'id',
+      },
+      allowNull: false,
+    },
+  
   });
+ 
   return Article;
 };

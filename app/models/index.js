@@ -24,6 +24,7 @@ db.advertiser = require('./advertiser.model.js')(sequelize, Sequelize)
 db.other = require('./other.model.js')(sequelize, Sequelize)
 
 db.role = require('./role.model.js')(sequelize, Sequelize)
+db.reply = require('./reply.model.js')(sequelize, Sequelize);
 
 db.commentaires = require('./commentaires.model.js')(sequelize, Sequelize)
 db.article = require('./article.model.js')(sequelize, Sequelize)
@@ -51,17 +52,61 @@ db.refreshToken.belongsTo(db.user, {
   targetKey: 'id',
 })
 
-///////////////////////////////
-db.article.belongsToMany(db.user, {
-  through: 'commentaires',
-  foreignKey: 'articleId',
+// db.article.belongsToMany(db.user, {
+//   through: 'commentaires',
+//   foreignKey: 'articleId',
+//   otherKey: 'userId',
+// })
+// db.user.belongsToMany(db.article, {
+//   through: 'commentaires',
+//   foreignKey: 'userId',
+//   otherKey: 'articleId',
+// })
+
+
+
+
+
+db.role.belongsToMany(db.user, {
+  through: 'user_roles',
+  foreignKey: 'roleId',
   otherKey: 'userId',
-})
-db.user.belongsToMany(db.article, {
-  through: 'commentaires',
+});
+
+db.user.belongsToMany(db.role, {
+  through: 'user_roles',
   foreignKey: 'userId',
-  otherKey: 'articleId',
-})
+  otherKey: 'roleId',
+});
+
+db.user.hasOne(db.refreshToken, {
+  foreignKey: 'userId',
+  targetKey: 'id',
+});
+db.refreshToken.belongsTo(db.user, {
+  foreignKey: 'userId',
+  targetKey: 'id',
+});
+
+db.Commentaires.hasMany(db.Reply, {
+  foreignKey: 'commentaireId',
+  onDelete: 'CASCADE',
+});
+
+db.Reply.belongsTo(db.Commentaires, {
+  foreignKey: 'commentaireId',
+});
+db.Reply.belongsTo(db.user, {
+  foreignKey: 'userId',
+});
+
+db.Reply = db.reply;
+
+db.Commentaires = db.commentaires;
+db.Article = db.article;
+
+
+
 //heritage
 db.user.hasMany(db.player, {
   as: 'player_user',

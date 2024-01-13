@@ -60,6 +60,9 @@ exports.create = async (req, res) => {
   }
 };
 
+
+
+
 exports.findAll = (req, res) => {
   const { page, size, type } = req.query;
   const { limit, offset } = getPagination(page, size);
