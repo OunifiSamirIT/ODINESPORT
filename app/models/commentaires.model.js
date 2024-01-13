@@ -16,10 +16,12 @@ module.exports = (sequelize, Sequelize) => {
     },
   });
 
-  Commentaires.hasMany(sequelize.models.Reply, {
-    foreignKey: 'commentaireId',
-    onDelete: 'CASCADE',
-  });
+  Commentaires.associate = (models) => {
+    Commentaires.hasMany(models.Reply, {
+      foreignKey: 'commentaireId',
+      onDelete: 'CASCADE',
+    });
+  };
 
   return Commentaires;
 };

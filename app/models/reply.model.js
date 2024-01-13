@@ -16,9 +16,14 @@ module.exports = (sequelize, Sequelize) => {
       },
     });
   
-    Reply.belongsTo(sequelize.models.Commentaires, {
-      foreignKey: 'commentaireId',
-    });
+    Reply.associate = (models) => {
+        Reply.belongsTo(models.Commentaires, {
+          foreignKey: 'commentaireId',
+        });
+        Reply.belongsTo(models.user, {  // Assuming your user model is named 'user'
+          foreignKey: 'userId',
+        });
+      };
   
     return Reply;
   };

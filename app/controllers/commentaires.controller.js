@@ -125,27 +125,11 @@ exports.deleteAll = (req, res) => {
     });
 };
 
-// exports.findCommentsOfArticle = async (req, res) => {
-//   const articleId = req.params.articleId;
-//   const data = await sql
-//     .query(
-//       `SELECT users.id as user_id, users.nom as user_nom, users.prenom as user_prenom, users.login as user_login, commentaires.id as comm_id, commentaires.description as comm_desc, commentaires.createdAt, commentaires.updatedAt FROM users, commentaires WHERE users.id = commentaires.userId and commentaires.articleId = ${articleId}`
-//     )
-//     .then((data) => {
-//       console.log("data : ", data[0]);
-//       res.send(data[0]);
-//     })
-//     .catch((err) => {
-//       res.status(500).send({
-//         message: err.message || "Some error occurred while retrieving membres.",
-//       });
-//     });
-// };
 exports.findCommentsOfArticle = async (req, res) => {
   const articleId = req.params.articleId;
   const data = await sql
     .query(
-      `SELECT users.id as user_id, users.nom as user_nom, users.prenom as user_prenom, users.login as user_login, commentaires.id as comm_id, commentaires.description as comm_desc, commentaires.createdAt, commentaires.updatedAt, commentaires.parentCommentId FROM users, commentaires WHERE users.id = commentaires.userId AND commentaires.articleId = ${articleId}`
+      `SELECT users.id as user_id, users.nom as user_nom, users.prenom as user_prenom, users.login as user_login, commentaires.id as comm_id, commentaires.description as comm_desc, commentaires.createdAt, commentaires.updatedAt FROM users, commentaires WHERE users.id = commentaires.userId and commentaires.articleId = ${articleId}`
     )
     .then((data) => {
       console.log("data : ", data[0]);
@@ -153,9 +137,25 @@ exports.findCommentsOfArticle = async (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message ||
-          "Some error occurred while retrieving membres.",
+        message: err.message || "Some error occurred while retrieving membres.",
       });
     });
 };
+// exports.findCommentsOfArticle = async (req, res) => {
+//   const articleId = req.params.articleId;
+//   const data = await sql
+//     .query(
+//       `SELECT users.id as user_id, users.nom as user_nom, users.prenom as user_prenom, users.login as user_login, commentaires.id as comm_id, commentaires.description as comm_desc, commentaires.createdAt, commentaires.updatedAt, commentaires WHERE users.id = commentaires.userId AND commentaires.articleId = ${articleId}`
+//     )
+//     .then((data) => {
+//       console.log("data : ", data[0]);
+//       res.send(data[0]);
+//     })
+//     .catch((err) => {
+//       res.status(500).send({
+//         message:
+//           err.message ||
+//           "Some error occurred while retrieving membres.",
+//       });
+//     });
+// };

@@ -15,21 +15,25 @@ const db = {}
 db.Sequelize = Sequelize
 db.sequelize = sequelize
 
-db.user = require('./user.model.js')(sequelize, Sequelize)
-db.player = require('./player.model.js')(sequelize, Sequelize)
-db.coach = require('./coach.model.js')(sequelize, Sequelize)
-db.agent = require('./agent.model.js')(sequelize, Sequelize)
-db.scout = require('./scout.model.js')(sequelize, Sequelize)
-db.advertiser = require('./advertiser.model.js')(sequelize, Sequelize)
-db.other = require('./other.model.js')(sequelize, Sequelize)
-
-db.role = require('./role.model.js')(sequelize, Sequelize)
+db.user = require('./user.model.js')(sequelize, Sequelize);
+db.player = require('./player.model.js')(sequelize, Sequelize);
+db.coach = require('./coach.model.js')(sequelize, Sequelize);
+db.agent = require('./agent.model.js')(sequelize, Sequelize);
+db.scout = require('./scout.model.js')(sequelize, Sequelize);
+db.advertiser = require('./advertiser.model.js')(sequelize, Sequelize);
+db.other = require('./other.model.js')(sequelize, Sequelize);
+db.role = require('./role.model.js')(sequelize, Sequelize);
+db.commentaires = require('./commentaires.model.js')(sequelize, Sequelize);
+db.article = require('./article.model.js')(sequelize, Sequelize);
+db.refreshToken = require('./refreshToken.model.js')(sequelize, Sequelize);
 db.reply = require('./reply.model.js')(sequelize, Sequelize);
 
-db.commentaires = require('./commentaires.model.js')(sequelize, Sequelize)
-db.article = require('./article.model.js')(sequelize, Sequelize)
+const Reply = require('./reply.model.js')(sequelize, Sequelize);
+db.Reply = Reply;
 
-db.refreshToken = require('./refreshToken.model.js')(sequelize, Sequelize)
+// Define associations after all models are loaded
+db.Commentaires = require('./commentaires.model.js')(sequelize, Sequelize);
+db.Article = require('./article.model.js')(sequelize, Sequelize);
 
 db.role.belongsToMany(db.user, {
   through: 'user_roles',
@@ -88,17 +92,20 @@ db.refreshToken.belongsTo(db.user, {
   targetKey: 'id',
 });
 
-db.Commentaires.hasMany(db.Reply, {
+/// Define associations
+db.Commentaires.hasMany(Reply, {
   foreignKey: 'commentaireId',
   onDelete: 'CASCADE',
 });
 
-db.Reply.belongsTo(db.Commentaires, {
+Reply.belongsTo(db.Commentaires, {
   foreignKey: 'commentaireId',
 });
-db.Reply.belongsTo(db.user, {
+Reply.belongsTo(db.user, {
   foreignKey: 'userId',
 });
+
+
 
 db.Reply = db.reply;
 
