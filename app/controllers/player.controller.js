@@ -8,7 +8,7 @@ exports.getPlayerByUserId = (req, res) => {
   
     Player.findOne({
       where: { iduser: userId },
-      include: [{ model: User, attributes: ['id', 'nom', 'email'] }],
+      include: [{ model: User, attributes: ['id', 'nom', 'email','prenom','date_naissance','tel','login','gender','nationality','countryresidence','cityresidence','profil','image'] }],
     })
       .then((data) => {
         if (data) {
