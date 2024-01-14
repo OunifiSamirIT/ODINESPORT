@@ -8,6 +8,12 @@ module.exports = (sequelize, Sequelize) => {
       description: {
         type: Sequelize.STRING,
       },
+      imageuser: {
+        type: Sequelize.STRING,
+      },
+      nom: {
+        type: Sequelize.STRING,
+      },
       userId: {
         type: Sequelize.INTEGER,
       },

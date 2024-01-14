@@ -69,6 +69,10 @@ articleRouter(app)
 
 const commentairesRouter = require('./app/routes/commentaires.routes')
 commentairesRouter(app)
+
+const replyRouter = require('./app/routes/reply.routes')
+replyRouter(app)
+
 const userRouter = require('./app/routes/user.routes')
 userRouter(app)
 
