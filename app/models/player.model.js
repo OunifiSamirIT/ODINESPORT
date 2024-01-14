@@ -18,7 +18,10 @@ module.exports = (sequelize, Sequelize) => {
     skillsInProfile: {
       type: Sequelize.STRING,
     },
-    
+    iduser: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
   })
   return Player
 }

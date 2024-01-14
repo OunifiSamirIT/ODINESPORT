@@ -76,6 +76,8 @@ replyRouter(app)
 const userRouter = require('./app/routes/user.routes')
 userRouter(app)
 
+const playerRouter = require('./app/routes/player.routes')
+playerRouter(app)
 // set port, listen for requests
 const PORT = process.env.PORT || 8088
 app.listen(PORT, '0.0.0.0', () => {
