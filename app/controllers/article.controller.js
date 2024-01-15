@@ -1,6 +1,8 @@
 const db = require("../models");
 const Article = db.article;
+const User = db.user;
 const Commentaires = db.commentaires;
+const UserLikes = db.userLikes;
 const Op = db.Sequelize.Op;
 const sql = db.sequelize;
 
@@ -194,3 +196,73 @@ exports.deleteAll = (req, res) => {
       });
     });
 };
+
+exports.addLikeToArticle = async (req, res) => {
+  const { articleId } = req.params;
+  const { userId } = req.body;
+
+  if (!articleId || !userId) {
+    return res.status(400).json({ success: false, message: 'Invalid input data' });
+  }
+
+  try {
+    const article = await Article.findByPk(articleId);
+    const user = await User.findByPk(userId);
+
+    if (!article || !user) {
+      return res.status(404).json({ success: false, message: 'Article or user not found' });
+    }
+
+    // Check if the user has already liked the article
+    const existingLike = await UserLikes.findOne({
+      where: { userId, articleId },
+      attributes: ['userId', 'articleId'], // Specify the primary key columns
+    });
+
+    if (existingLike) {
+      return res.status(400).json({ success: false, message: 'User has already liked this article' });
+    }
+
+    // Add a like to the article
+    await UserLikes.create({ userId, articleId });
+    await article.increment('likes'); // Increment the likes count in the Article model
+
+    return res.status(200).json({ success: true, message: 'Like added successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
+
+// exports.getLikesForArticle = async (req, res) => {
+//   const articleId = req.params.id;
+
+//   try {
+//     const article = await db.article.findByPk(articleId, {
+//       include: [
+//         {
+//           model: db.user,
+//           as: 'likedBy',
+//           attributes: ['id', 'username', 'email'], // Include only necessary user attributes
+//         },
+//       ],
+//     });
+
+//     if (!article) {
+//       return res.status(404).send({
+//         message: `Article with id=${articleId} not found.`,
+//       });
+//     }
+
+//     res.send({
+//       articleId: article.id,
+//       likes: article.likedBy,
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send({
+//       message: `Error retrieving likes for Article with id=${articleId}.`,
+//     });
+//   }
+// };

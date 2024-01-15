@@ -28,6 +28,7 @@ db.article = require('./article.model.js')(sequelize, Sequelize);
 db.refreshToken = require('./refreshToken.model.js')(sequelize, Sequelize);
 db.reply = require('./reply.model.js')(sequelize, Sequelize);
 db.friend_requests = require('./friendRequest.model.js')(sequelize, Sequelize);
+db.userLikes = require('./userLikes.model.js')(sequelize, Sequelize);
 
 const Reply = require('./reply.model.js')(sequelize, Sequelize);
 db.Reply = Reply;
@@ -121,7 +122,17 @@ db.user.belongsToMany(db.user, {
   otherKey: 'senderId',
 });
 
+db.user.belongsToMany(db.article, {
+  through: 'UserLikes',
+  as: 'likedArticles',
+  foreignKey: 'userId',
+});
 
+db.article.belongsToMany(db.user, {
+  through: 'UserLikes',
+  as: 'likedBy',
+  foreignKey: 'articleId',
+});
 
 
 

@@ -26,4 +26,8 @@ module.exports = function (app) {
   app.put('/api/articles/:id', controller.update)
   app.delete('/api/articles/', controller.deleteAll)
   app.delete('/api/articles/:id', controller.delete)
+  app.post('/api/articles/like/:articleId', controller.addLikeToArticle);
+  // app.get('/api/articles/:id/likes', controller.getLikesForArticle);
+
+
 }

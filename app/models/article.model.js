@@ -24,8 +24,26 @@ module.exports = (sequelize, Sequelize) => {
       },
       allowNull: false,
     },
-  
+    likes: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0, // Initial value of likes is 0
+    },
+
+    likes: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0, // Initial value of likes is 0
+    },
   });
+
+  Article.associate = (models) => {
+    Article.belongsToMany(models.User, {
+      through: 'UserLikes',
+      as: 'likedBy',
+      foreignKey: 'articleId',
+    });
+  
+
+  }
  
   return Article;
 };
