@@ -32,4 +32,9 @@ module.exports = function (app) {
   app.get('/api/user', controller.findAll)
   app.put('/api/user/:id', controller.update)
   app.put('/api/user/img/:id', upload.single('image'), controller.changerImage)
+ 
+  app.get('/api/user/:id/suggest/random', controller.suggestRandomUsers);
+  app.post('/api/user/:id/sendFriendRequest/:friendId', controller.sendFriendRequest);
+  app.get('/api/user/:id/friend-requests', controller.getFriendRequests);
+
 }

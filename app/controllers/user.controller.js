@@ -1,5 +1,7 @@
 const db = require('../models')
 const User = db.user
+const FriendRequest = db.friend_requests;
+
 const Op = db.Sequelize.Op
 const sql = db.sequelize
 
@@ -122,3 +124,163 @@ exports.changerImage = (req, res) => {
       })
     })
 }
+
+
+
+exports.suggestRandomUsers = async (req, res) => {
+  const userId = req.params.id; // The user for whom we are suggesting friends
+  try {
+    // Find the user with the given ID
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).send({
+        message: `Cannot find User with id=${userId}.`,
+      });
+    }
+
+    // Get the total number of users in the database
+    const totalUsers = await User.count();
+
+    // Generate a random offset to get a random set of users
+    const randomOffset = Math.floor(Math.random() * totalUsers);
+
+    // Find random users (excluding the user themselves)
+    const suggestedUsers = await User.findAll({
+      where: {
+        id: {
+          [Op.not]: userId, // Exclude the current user
+        },
+      },
+      attributes: {
+        exclude: ['password'],
+      },
+      limit: 5, // Adjust the limit based on how many users you want to suggest
+      offset: randomOffset,
+    });
+
+    res.send(suggestedUsers);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({
+      message: 'Error suggesting random users.',
+    });
+  }
+};
+
+
+exports.sendFriendRequest = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const friendId = req.params.friendId;
+
+    // Check if any existing friend request exists
+    const existingRequest = await FriendRequest.findOne({
+      where: {
+        [Op.or]: [
+          { senderId: userId, receiverId: friendId },
+          { senderId: friendId, receiverId: userId },
+        ],
+        status: 'pending', // Adjust the status based on your implementation
+      },
+    });
+
+    if (!existingRequest) {
+      // If no existing request is found, create a new friend request
+      await FriendRequest.create({
+        senderId: userId,
+        receiverId: friendId,
+        status: 'pending', // Adjust the status based on your implementation
+      });
+    }
+
+    res.send({
+      message: 'Friend request sent successfully.',
+    });
+  } catch (error) {
+    console.error('Error sending friend request:', error);
+    res.status(500).send({
+      message: 'Error sending friend request.',
+    });
+  }
+};
+
+// exports.getFriendRequests = async (req, res) => {
+//   const userId = req.params.id;
+
+//   try {
+//     // Find friend requests where the user is either the sender or the receiver
+//     const friendRequests = await db.user.findByPk(userId, {
+//       include: [
+//         {
+//           model: db.user,
+//           as: 'receiver',
+//           through: {
+//             model: db.friend_requests,
+//             where: { status: 'pending' },
+//           },
+//         },
+//       ],
+//     });
+
+//     if (!friendRequests) {
+//       return res.status(404).send({
+//         message: `Cannot find User with id=${userId}.`,
+//       });
+//     }
+
+//     // Check if there are any friend requests with the status 'pending' and receiver has content
+//     if (
+//       friendRequests.receiver &&
+//       friendRequests.receiver.length > 0
+//     ) {
+//       res.send(friendRequests);
+//     } else {
+//       res.send({
+//         message: 'No pending friend requests found for the user with content in the receiver.',
+//       });
+//     }
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send({
+//       message: 'Error fetching friend requests.',
+//     });
+//   }
+// };
+
+exports.getFriendRequests = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    // Find friend requests where the user is either the sender or the receiver
+    const friendRequests = await db.user.findByPk(userId, {
+      include: [
+        {
+          model: db.user,
+          as: 'receiver',
+          through: {
+            model: db.friend_requests,
+            where: { status: 'pending' },
+          },
+        },
+      ],
+    });
+
+    // if (!friendRequests) {
+    //   return res.status(404).send({
+    //     message: `Cannot find User with id=${userId}.`,
+    //   });
+    // }
+
+    // Check if there are any friend requests with the status 'pending' and receiver has content
+    if (friendRequests.receiver && friendRequests.receiver.length > 0) {
+      res.send(friendRequests);
+    }
+    // No else block here to skip sending a response if there are no pending friend requests
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({
+      message: 'Error fetching friend requests.',
+    });
+  }
+};

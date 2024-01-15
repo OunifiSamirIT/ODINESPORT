@@ -27,6 +27,7 @@ db.commentaires = require('./commentaires.model.js')(sequelize, Sequelize);
 db.article = require('./article.model.js')(sequelize, Sequelize);
 db.refreshToken = require('./refreshToken.model.js')(sequelize, Sequelize);
 db.reply = require('./reply.model.js')(sequelize, Sequelize);
+db.friend_requests = require('./friendRequest.model.js')(sequelize, Sequelize);
 
 const Reply = require('./reply.model.js')(sequelize, Sequelize);
 db.Reply = Reply;
@@ -104,6 +105,24 @@ Reply.belongsTo(db.Commentaires, {
 Reply.belongsTo(db.user, {
   foreignKey: 'userId',
 });
+
+
+db.user.belongsToMany(db.user, {
+  through: 'friend_requests',
+  as: 'sender',
+  foreignKey: 'senderId',
+  otherKey: 'receiverId',
+});
+
+db.user.belongsToMany(db.user, {
+  through: 'friend_requests',
+  as: 'receiver',
+  foreignKey: 'receiverId',
+  otherKey: 'senderId',
+});
+
+
+
 
 
 

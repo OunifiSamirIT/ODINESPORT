@@ -39,7 +39,10 @@ module.exports = (sequelize, Sequelize) => {
     image: {
       type: Sequelize.STRING,
     },
+    friends: {
+      type: Sequelize.JSON, 
+    },
   })
-  
+
   return User
 }
