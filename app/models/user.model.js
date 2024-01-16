@@ -42,6 +42,13 @@ module.exports = (sequelize, Sequelize) => {
     friends: {
       type: Sequelize.JSON, 
     },
+    verificationToken: {
+      type: Sequelize.STRING,
+    },
+    isVerified: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
   })
 
   return User
