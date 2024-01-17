@@ -20,5 +20,7 @@ module.exports = function (app) {
   app.post('/api/auth/refreshtoken', controller.refreshToken)
   app.get('/api/auth/verify-email', controller.verifyEmail);
   app.get('/api/auth/check-verification/:userId', controller.checkVerificationStatus);
+  app.post('/api/auth/forgotPassword', controller.forgotPassword);
+  app.post('/api/auth/resetPassword', controller.resetPassword);
 
 }

@@ -10,6 +10,9 @@ module.exports = (sequelize, Sequelize) => {
     image: {
       type: Sequelize.STRING,
     },
+    video: {
+      type: Sequelize.STRING,
+    },
     etat: {
       type: Sequelize.INTEGER,
     },

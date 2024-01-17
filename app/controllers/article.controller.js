@@ -35,11 +35,27 @@ exports.create = async (req, res) => {
       });
       return;
     } else {
+
+
+      let mediaType;
+      if (req.file && req.file.mimetype.startsWith('image')) {
+        mediaType = 'image';
+      } else if (req.file && req.file.mimetype.startsWith('video')) {
+        mediaType = 'video';
+      } else {
+        return res.status(400).send({
+          message: "Unsupported media type",
+        });
+      }
+
+
+
       var imgsrc = "http://localhost:8088/uploads/" + req.file.filename;
       Article.create({
         titre: req.body.titre,
         description: req.body.description,
-        image: imgsrc,
+        image: mediaType === 'image' ? imgsrc : null,
+        video: mediaType === 'video' ? imgsrc : null,
         etat: "0",
         userId: req.body.userId,
         type: req.body.type,

@@ -242,55 +242,7 @@ async function sendVerificationEmail(email, verificationLink) {
 
 
 
-// exports.signin = (req, res) => {
-//   User.findOne({
-//     where: {
-//       login: req.body.login,
-//     },
-//   })
-//     .then(async (user) => {
-//       if (!user) {
-//         return res.status(404).send({ message: 'User Not found.' })
-//       }
-//       const passwordIsValid = bcrypt.compareSync(
-//         req.body.password,
-//         user.password
-//       )
-//       if (!passwordIsValid) {
-//         return res.status(401).send({
-//           accessToken: null,
-//           message: 'Invalid Password!',
-//         })
-//       }
 
-//       const token = jwt.sign({ id: user.id }, config.secret, {
-//         expiresIn: config.jwtExpiration,
-//       })
-
-//       let refreshToken = await RefreshToken.createToken(user)
-//       let permissions = []
-//       user.getRoles().then((roles) => {
-//         for (let i = 0; i < roles.length; i++) {
-//           permissions.push('ROLE_' + roles[i].name.toUpperCase())
-//         }
-//         res.status(200).send({
-//           id: user.id,
-//           username: user.login,
-//           email: user.email,
-//           login: user.login,
-//           profil: user.profil,
-//           image: user.image,
-//           etat: user.etat,
-//           roles: permissions,
-//           accessToken: token,
-//           refreshToken: refreshToken,
-//         })
-//       })
-//     })
-//     .catch((err) => {
-//       res.status(500).send({ message: err.message })
-//     })
-// }
 exports.signin = async (req, res) => {
   try {
     const user = await User.findOne({
@@ -312,13 +264,7 @@ exports.signin = async (req, res) => {
       });
     }
 
-    // Check if the user is verified
-    // if (!user.isVerified) {
-    //   return res.status(403).send({
-    //     accessToken: null,
-    //     message: 'Please verify your email before logging in.',
-    //   });
-    // }
+    
 
     const token = jwt.sign({ id: user.id }, config.secret, {
       expiresIn: config.jwtExpiration,
@@ -460,3 +406,82 @@ exports.checkVerificationStatus = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Find user by email
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    // Generate a password reset token and save it in the database
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpiration = Date.now() + 3600000; // Token is valid for 1 hour
+
+    await user.update({ resetToken, resetTokenExpiration });
+
+    // Send a password reset email
+    const resetLink = `http://localhost:5173/login/${resetToken}`;
+    await sendPasswordResetEmail(user.email, resetLink);
+
+    res.json({ message: 'Password reset email sent successfully.' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Add a new route for handling password reset
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body;
+
+    // Find user by reset token
+    const user = await User.findOne({
+      where: {
+        resetToken: token,
+        resetTokenExpiration: { [Op.gte]: Date.now() },
+      },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired reset token.' });
+    }
+
+    // Update the user's password and clear the reset token fields
+    await user.update({
+      password: bcrypt.hashSync(password, 8),
+      resetToken: null,
+      resetTokenExpiration: null,
+    });
+
+    res.json({ message: 'Password reset successful.' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+async function sendPasswordResetEmail(email, resetLink) {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Password Reset',
+    html: `Click <a href="${resetLink}">here</a> to reset your password.`,
+  };
+
+  await transporter.sendMail(mailOptions);
+}

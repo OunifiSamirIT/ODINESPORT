@@ -49,6 +49,14 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
     },
+    resetToken: {
+      type: Sequelize.STRING,
+      allowNull: true, // or false based on your schema
+    },
+    resetTokenExpiration: {
+      type: Sequelize.DATE,
+      allowNull: true, // or false based on your schema
+    },
   })
 
   return User
