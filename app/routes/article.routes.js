@@ -23,11 +23,14 @@ module.exports = function (app) {
   app.get('/api/articles/:id', controller.findOne)
   app.get('/api/articles/', controller.findAll)
   app.post('/api/articles/', upload.single("file"), controller.create)
-  app.put('/api/articles/:id', controller.update)
+  // app.put('/api/articles/:id', controller.update)
+  app.put('/api/articles/:id', upload.single('file'), controller.update);
+
   app.delete('/api/articles/', controller.deleteAll)
   app.delete('/api/articles/:id', controller.delete)
   app.post('/api/articles/like/:articleId', controller.addLikeToArticle);
   // app.get('/api/articles/:id/likes', controller.getLikesForArticle);
+  app.get('/api/articles/gallery/:id', controller.displayGallery);
 
 
 }

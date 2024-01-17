@@ -146,28 +146,81 @@ exports.findOne = (req, res) => {
     });
 };
 
-exports.update = (req, res) => {
-  const id = req.params.id;
-  Article.update(req.body, {
-    where: { id: id },
-  })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "Article was updated successfully.",
-        });
-      } else {
-        res.send({
-          message: `Cannot update Article with id=${id}. Maybe Article was not found or req.body is empty!`,
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error updating Article with id=" + id,
+// exports.update = (req, res) => {
+//   const id = req.params.id;
+//   Article.update(req.body, {
+//     where: { id: id },
+//   })
+//     .then((num) => {
+//       if (num == 1) {
+//         res.send({
+//           message: "Article was updated successfully.",
+//         });
+//       } else {
+//         res.send({
+//           message: `Cannot update Article with id=${id}. Maybe Article was not found or req.body is empty!`,
+//         });
+//       }
+//     })
+//     .catch((err) => {
+//       res.status(500).send({
+//         message: "Error updating Article with id=" + id,
+//       });
+//     });
+// };
+exports.update = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const article = await Article.findByPk(id);
+
+    if (!article) {
+      return res.status(404).send({
+        message: `Article with id=${id} not found.`,
       });
+    }
+
+    // Check if the user making the request is the owner of the article
+    // You can uncomment this block if you have user authentication enabled
+    // if (req.user.id !== article.userId) {
+    //   return res.status(403).send({
+    //     message: "You do not have permission to update this article.",
+    //   });
+    // }
+
+    // Update article properties
+    article.titre = req.body.titre || article.titre;
+    article.description = req.body.description || article.description;
+
+    // Handle updating image
+    if (req.file && req.file.mimetype.startsWith('image')) {
+      // Assuming you have a directory named 'uploads' for storing images
+      const imgsrc = "http://localhost:8088/uploads/" + req.file.filename;
+      article.image = imgsrc || article.image;
+    }
+
+    // Handle updating video
+    if (req.file && req.file.mimetype.startsWith('video')) {
+      // Assuming you have a directory named 'uploads' for storing videos
+      const videoSrc = "http://localhost:8088/uploads/" + req.file.filename;
+      article.video = videoSrc;
+    }
+
+    // Save the updated article
+    await article.save();
+
+    return res.status(200).send({
+      message: "Article updated successfully",
+      data: article,
     });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      message: "Error updating article",
+    });
+  }
 };
+
 
 exports.delete = (req, res) => {
   const id = req.params.id;
@@ -282,3 +335,22 @@ exports.addLikeToArticle = async (req, res) => {
 //     });
 //   }
 // };
+
+exports.displayGallery = async (req, res) => {
+  try {
+    const galleryItems = await Article.findAll({
+      where: {
+        [Op.or]: [
+          { image: { [Op.not]: null } },
+          { video: { [Op.not]: null } },
+        ],
+      },
+      attributes: ['id', 'titre', 'image', 'video' , 'userId'],
+    });
+
+    res.send({ gallery: galleryItems });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Error retrieving gallery items' });
+  }
+};
