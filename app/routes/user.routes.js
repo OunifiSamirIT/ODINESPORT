@@ -2,6 +2,7 @@ const { authJwt } = require('../middleware')
 const controller = require('../controllers/user.controller')
 const multer = require('multer')
 const path = require('path')
+const playerController = require('../controllers/player.controller');
 
 var storage = multer.diskStorage({
   destination: (req, file, callBack) => {
@@ -36,5 +37,6 @@ module.exports = function (app) {
   app.get('/api/user/:id/suggest/random', controller.suggestRandomUsers);
   app.post('/api/user/:id/sendFriendRequest/:friendId', controller.sendFriendRequest);
   app.get('/api/user/:id/friend-requests', controller.getFriendRequests);
+  app.put('/api/user/:iduser/updatePlayer', playerController.updatePlayerByUserId);
 
 }

@@ -209,6 +209,8 @@ exports.signup = async (req, res) => {
   }
 };
 
+
+//avant de se connecter
 async function sendVerificationEmail(email, verificationLink) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -331,7 +333,7 @@ exports.refreshToken = async (req, res) => {
   }
 }
 
-
+// verifier email pour se connecter
 exports.verifyEmail = async (req, res) => {
   try {
     const { token } = req.query;
@@ -363,27 +365,7 @@ exports.verifyEmail = async (req, res) => {
 };
 
 
-// exports.verifyEmail = async (req, res) => {
-//   try {
-//     const { token } = req.query;
-
-//     // Find user by verificationToken
-//     const user = await User.findOne({ where: { verificationToken: token } });
-
-//     if (!user) {
-//       return res.status(404).json({ message: 'Invalid verification token.' });
-//     }
-
-//     // Update user as verified
-//     await user.update({ isVerified: true, verificationToken: null });
-
-//     res.json({ message: 'Email verification successful. You can now log in.' });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
-
+//verifier verifier ou nn son mail
 exports.checkVerificationStatus = async (req, res) => {
   try {
     const userId = req.params.userId; // Assuming you are passing the userId as a parameter
@@ -437,7 +419,7 @@ exports.forgotPassword = async (req, res) => {
   }
 };
 
-// Add a new route for handling password reset
+//  password reset
 exports.resetPassword = async (req, res) => {
   try {
     const { token, password } = req.body;
@@ -467,6 +449,7 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
+// email pour verifier le re reset password
 async function sendPasswordResetEmail(email, resetLink) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',

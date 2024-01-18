@@ -14,5 +14,5 @@ module.exports = function (app) {
   app.get('/api/player/:iduser', playerController.getPlayerByUserId);
 
   app.get('/api/players', playerController.getAllPlayers);
-
+  app.put('/api/player/:iduser', playerController.updatePlayerByUserId);
 };
