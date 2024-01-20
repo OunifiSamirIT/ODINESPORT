@@ -78,6 +78,22 @@ exports.create = async (req, res) => {
   }
 };
 
+exports.findByUserId = (req, res) => {
+  const { userId } = req.params;
+
+  Article.findAll({
+    where: { userId: userId },
+    attributes: ['id', 'titre', 'description', 'image', 'video', 'createdAt', 'updatedAt'],
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving articles by userId.",
+      });
+    });
+};
 
 
 

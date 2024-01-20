@@ -4,6 +4,7 @@ const FriendRequest = db.friend_requests;
 
 const Op = db.Sequelize.Op
 const sql = db.sequelize
+var bcrypt = require('bcryptjs')
 
 const getPagination = (page, size) => {
   const limit = size ? +size : 9
@@ -73,28 +74,50 @@ exports.findAll = (req, res) => {
     })
 }
 
-exports.update = (req, res) => {
-  const id = req.params.id
-  User.update(req.body, {
-    where: { id: id },
-  })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: 'User was updated successfully.',
-        })
-      } else {
-        res.send({
-          message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`,
-        })
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: 'Error updating Article with id=' + id,
-      })
-    })
-}
+exports.update = async (req, res) => {
+  const id = req.params.id;
+
+  // Validate password complexity
+  const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(.{8,})$/;
+
+  // Check if the request body contains the 'password' field
+  if (req.body.password) {
+    // Check if the password meets the complexity requirements
+    if (!passwordRegex.test(req.body.password)) {
+      return res.status(400).send({
+        message: 'Password must be at least 8 characters long, include at least one uppercase letter, and one special character.',
+      });
+    }
+
+    // Hash the password
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(req.body.password, salt);
+
+    // Replace the plain password with the hashed password
+    req.body.password = hashedPassword;
+  }
+
+  try {
+    const [num] = await User.update(req.body, {
+      where: { id: id },
+    });
+
+    if (num == 1) {
+      res.send({
+        message: 'User was updated successfully.',
+      });
+    } else {
+      res.send({
+        message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`,
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({
+      message: 'Error updating User with id=' + id,
+    });
+  }
+};
 
 exports.changerImage = (req, res) => {
   const id = req.params.id

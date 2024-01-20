@@ -25,8 +25,10 @@ exports.getPlayerByUserId = (req, res) => {
         });
       });
   };
-exports.getAllPlayers = (req, res) => {
-    player.findAll()
+  exports.getAllPlayers = (req, res) => {
+    Player.findAll({
+      include: [{ model: User, attributes: ['id', 'nom', 'email','prenom','date_naissance','tel','login','gender','nationality','countryresidence','cityresidence','profil','image'] }],
+    })
       .then((data) => {
         res.send(data);
       })

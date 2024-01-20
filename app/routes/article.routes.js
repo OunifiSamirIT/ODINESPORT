@@ -31,6 +31,7 @@ module.exports = function (app) {
   app.post('/api/articles/like/:articleId', controller.addLikeToArticle);
   // app.get('/api/articles/:id/likes', controller.getLikesForArticle);
   app.get('/api/articles/gallery/:id', controller.displayGallery);
+  app.get('/api/articles/byUser/:userId', controller.findByUserId);
 
 
 }
