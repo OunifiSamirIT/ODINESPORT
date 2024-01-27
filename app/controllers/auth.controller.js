@@ -166,10 +166,12 @@ exports.signup = async (req, res) => {
           iduser: user.id,
           height: req.body.height,
           weight: req.body.weight,
-          strongSkill: req.body.strongSkill,
+          PiedFort: req.body.PiedFort,
+          Licence: req.body.Licence,
           positionPlay: req.body.positionPlay,
           positionSecond: req.body.positionSecond,
           skillsInProfile: req.body.skillsInProfile,
+          NumeroWhatsup: req.body.NumeroWhatsup,
         });
       } else if (profil === 'coach') {
         await Coach.create({
@@ -182,8 +184,10 @@ exports.signup = async (req, res) => {
         if (req.body.typeresponsable === 'club') {
           await Agent.create({
             iduser: user.id,
-            totalCareerTransfers: req.body.totalCareerTransfers,
+            typeresponsable: req.body.typeresponsable,
             clubCovered: req.body.clubCovered,
+            paysclub: req.body.paysclub,
+            
             skills: req.body.skills,
           });
         } else if (req.body.typeresponsable === 'players') {
@@ -192,7 +196,18 @@ exports.signup = async (req, res) => {
             totalCareerTransfers: req.body.totalCareerTransfers,
             typeresponsable: req.body.typeresponsable,
             totalPlayer: req.body.totalPlayer,
+            pays: req.body.pays,
+
             skills: req.body.skills,
+          });
+        }else if (profil === 'scout') {
+          await Scout.create({
+            iduser: user.id,
+            engagement: req.body.engagement,
+            nb_joueurdetecter: req.body.nb_joueurdetecter,
+            paysscout: req.body.paysscout,
+            skillsscout: req.body.skillsscout,
+
           });
         }
       }

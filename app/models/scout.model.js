@@ -1,16 +1,16 @@
 module.exports = (sequelize, Sequelize) => {
   const Scout = sequelize.define('scouts', {
-    totalPlayer: {
+    engagement: {
       type: Sequelize.STRING,
     },
-    typeOfScouting: {
+    nb_joueurdetecter: {
       type: Sequelize.STRING,
     },
-    locationOfScouting: {
+    paysscout: {
       type: Sequelize.STRING,
     },
       //tjs a la fin de process de register
-      skills: {
+      skillsscout: {
         type: Sequelize.STRING,
       },
     

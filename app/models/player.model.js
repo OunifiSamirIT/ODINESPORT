@@ -6,7 +6,10 @@ module.exports = (sequelize, Sequelize) => {
     weight: {
       type: Sequelize.STRING,
     },
-    strongSkill: {
+    PiedFort: {
+      type: Sequelize.STRING,
+    },
+    Licence: {
       type: Sequelize.STRING,
     },
     positionPlay: {
@@ -15,9 +18,14 @@ module.exports = (sequelize, Sequelize) => {
     positionSecond: {
       type: Sequelize.STRING,
     },
+   
     skillsInProfile: {
       type: Sequelize.STRING,
     },
+    NumeroWhatsup: {
+      type: Sequelize.STRING,
+    },
+   
     iduser: {
       type: Sequelize.INTEGER,
       allowNull: false,

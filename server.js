@@ -4,7 +4,7 @@ const app = express()
 require('dotenv').config();
 
 var corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: 'http://localhost:3000',
 }
 app.use(cors(corsOptions))
 // parse requests of content-type - application/json
@@ -17,7 +17,7 @@ const db = require('./app/models')
 const Role = db.role
 db.sequelize.sync().then(() => {
   console.log('Resync Db ...')
-  //initial()
+  // initial()
 })
 
 function initial() {

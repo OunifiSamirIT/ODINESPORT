@@ -14,6 +14,13 @@ module.exports = (sequelize, Sequelize) => {
     typeresponsable: {
       type: Sequelize.STRING,
     },
+    
+    pays: {
+      type: Sequelize.STRING,
+    },
+    paysclub: {
+      type: Sequelize.STRING,
+    },
     //tjs a la fin de process de register
     skills: {
       type: Sequelize.STRING,
