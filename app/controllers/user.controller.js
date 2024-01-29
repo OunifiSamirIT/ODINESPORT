@@ -75,46 +75,70 @@ exports.findAll = (req, res) => {
 }
 
 exports.update = async (req, res) => {
-  const id = req.params.id;
-
-  // Validate password complexity
-  const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(.{8,})$/;
-
-  // Check if the request body contains the 'password' field
-  if (req.body.password) {
-    // Check if the password meets the complexity requirements
-    if (!passwordRegex.test(req.body.password)) {
-      return res.status(400).send({
-        message: 'Password must be at least 8 characters long, include at least one uppercase letter, and one special character.',
-      });
-    }
-
-    // Hash the password
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(req.body.password, salt);
-
-    // Replace the plain password with the hashed password
-    req.body.password = hashedPassword;
-  }
+  const { id } = req.params;
 
   try {
-    const [num] = await User.update(req.body, {
-      where: { id: id },
-    });
+    const user = await User.findByPk(id);
 
-    if (num == 1) {
-      res.send({
-        message: 'User was updated successfully.',
-      });
-    } else {
-      res.send({
-        message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`,
+    if (!user) {
+      return res.status(404).send({
+        message: `User with id=${id} not found.`,
       });
     }
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      message: 'Error updating User with id=' + id,
+
+    // Check if the user making the request is the owner of the profile
+    // You can uncomment this block if you have user authentication enabled
+    // if (req.user.id !== user.id) {
+    //   return res.status(403).send({
+    //     message: "You do not have permission to update this user profile.",
+    //   });
+    // }
+
+    // Update user properties
+    user.nom = req.body.nom || user.nom;
+    user.prenom = req.body.prenom || user.prenom;
+    user.date_naissance = req.body.date_naissance || user.date_naissance;
+    user.gender = req.body.gender || user.gender;
+    user.nationality = req.body.nationality || user.nationality;
+    user.countryresidence = req.body.countryresidence || user.countryresidence;
+    user.cityresidence = req.body.cityresidence || user.cityresidence;
+    user.tel = req.body.tel || user.tel;
+    user.login = req.body.login || user.login;
+
+    // Check if a new password is provided
+    if (req.body.password) {
+      // Validate the password
+      const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(.{8,})$/;
+      if (!passwordRegex.test(req.body.password)) {
+        return res.status(400).send({
+          message: 'Password must be at least 8 characters long, include at least one uppercase letter, and one special character.',
+        });
+      }
+
+      // Hash the new password
+      const salt = bcrypt.genSaltSync(10);
+      const hashedPassword = bcrypt.hashSync(req.body.password, salt);
+      user.password = hashedPassword;
+    }
+
+    // Handle updating profile picture
+    if (req.file && req.file.mimetype.startsWith('image')) {
+      // Assuming you have a directory named 'uploads' for storing images
+      const imgSrc = "http://localhost:8088/uploads/" + req.file.filename;
+      user.image = imgSrc;
+    }
+
+    // Save the updated user profile
+    await user.save();
+
+    return res.status(200).send({
+      message: "User profile updated successfully",
+      data: user,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      message: "Error updating user profile",
     });
   }
 };

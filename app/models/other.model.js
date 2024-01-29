@@ -3,8 +3,12 @@ module.exports = (sequelize, Sequelize) => {
     profession: {
       type: Sequelize.STRING,
     },
-    skills: {
+    skillsAutre: {
       type: Sequelize.STRING,
+    },
+    iduser: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
     },
   })
   return Other

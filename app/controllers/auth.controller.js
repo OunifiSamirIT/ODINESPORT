@@ -1,27 +1,25 @@
-const db = require('../models')
-const config = require('../config/auth.config')
-const User = db.user
-const Player = db.player
-const Coach = db.coach
-const Manager = db.manager
-const Agent = db.agent
-const Scout = db.scout
-const Club = db.club
-const Advertiser = db.advertiser
-const Other = db.other
-const Role = db.role
+const db = require("../models");
+const config = require("../config/auth.config");
+const User = db.user;
+const Player = db.player;
+const Coach = db.coach;
+const Manager = db.manager;
+const Agent = db.agent;
+const Scout = db.scout;
+const Club = db.club;
+const Advertiser = db.advertiser;
+const Other = db.other;
+const Role = db.role;
 
-const RefreshToken = db.refreshToken
+const RefreshToken = db.refreshToken;
 
-const Op = db.Sequelize.Op
-var jwt = require('jsonwebtoken')
-var bcrypt = require('bcryptjs')
+const Op = db.Sequelize.Op;
+var jwt = require("jsonwebtoken");
+var bcrypt = require("bcryptjs");
 
 //mail verf
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
-
-
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 
 // exports.signup = (req, res) => {
 //   // Save User to Database
@@ -75,7 +73,7 @@ const nodemailer = require('nodemailer');
 //               totalTeam: req.body.totalTeam,
 //               countryCoachedIn: req.body.countryCoachedIn,
 //               skills: req.body.skills,
-              
+
 //             }).then(console.log('coach insere'))
 //           }
 //           if (profil === 'agent') {
@@ -94,7 +92,7 @@ const nodemailer = require('nodemailer');
 //                 iduser: user.id,
 //                 totalCareerTransfers: req.body.totalCareerTransfers,
 //                 typeresponsable: req.body.typeresponsable,
-                
+
 //                 totalPlayer: req.body.totalPlayer,
 //                 skills: req.body.skills,
 //               }).then(console.log('agent insere'))
@@ -123,12 +121,9 @@ const nodemailer = require('nodemailer');
 //     })
 // }
 
-
-
-
 exports.signup = async (req, res) => {
   try {
-    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationToken = crypto.randomBytes(32).toString("hex");
 
     const user = await User.create({
       nom: req.body.nom,
@@ -159,9 +154,9 @@ exports.signup = async (req, res) => {
         },
       });
 
-      const profil = roles[0]['name'];
+      const profil = roles[0]["name"];
 
-      if (profil === 'player') {
+      if (profil === "player") {
         await Player.create({
           iduser: user.id,
           height: req.body.height,
@@ -173,24 +168,24 @@ exports.signup = async (req, res) => {
           skillsInProfile: req.body.skillsInProfile,
           NumeroWhatsup: req.body.NumeroWhatsup,
         });
-      } else if (profil === 'coach') {
+      } else if (profil === "coach") {
         await Coach.create({
           iduser: user.id,
           totalTeam: req.body.totalTeam,
           countryCoachedIn: req.body.countryCoachedIn,
           skills: req.body.skills,
         });
-      } else if (profil === 'agent') {
-        if (req.body.typeresponsable === 'club') {
+      } else if (profil === "agent") {
+        if (req.body.typeresponsable === "club") {
           await Agent.create({
             iduser: user.id,
             typeresponsable: req.body.typeresponsable,
             clubCovered: req.body.clubCovered,
             paysclub: req.body.paysclub,
-            
+
             skills: req.body.skills,
           });
-        } else if (req.body.typeresponsable === 'players') {
+        } else if (req.body.typeresponsable === "players") {
           await Agent.create({
             iduser: user.id,
             totalCareerTransfers: req.body.totalCareerTransfers,
@@ -200,35 +195,42 @@ exports.signup = async (req, res) => {
 
             skills: req.body.skills,
           });
-        }else if (profil === 'scout') {
-          await Scout.create({
-            iduser: user.id,
-            engagement: req.body.engagement,
-            nb_joueurdetecter: req.body.nb_joueurdetecter,
-            paysscout: req.body.paysscout,
-            skillsscout: req.body.skillsscout,
-
-          });
         }
+      } else if (profil === "scout") {
+        await db.scout.create({
+          iduser: user.id,
+          engagement: req.body.engagement,
+          nb_joueurdetecter: req.body.nb_joueurdetecter,
+          paysscout: req.body.paysscout,
+          skillsscout: req.body.skillsscout,
+        });
+      } else if (profil === "other") {
+        await db.other.create({
+          iduser: user.id,
+          profession: req.body.profession,
+          skillsAutre: req.body.skillsAutre,
+        });
       }
-
       user.setRoles(roles);
     } else {
       // Default role assignment
       await user.setRoles([7]);
     }
-   
-    res.send({ message: 'User was registered successfully. Please check your email for verification.' });
+
+    res.status(200).send({
+      message:
+        "User was registered successfully. Please check your email for verification.",
+    });
   } catch (err) {
+    console.error(err);
     res.status(500).send({ message: err.message });
   }
 };
 
-
 //avant de se connecter
 async function sendVerificationEmail(email, verificationLink) {
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
@@ -238,27 +240,12 @@ async function sendVerificationEmail(email, verificationLink) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Email Verification',
+    subject: "Email Verification",
     html: `Click <a href="${verificationLink}">here</a> to verify your email.`,
   };
 
   await transporter.sendMail(mailOptions);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 exports.signin = async (req, res) => {
   try {
@@ -269,19 +256,20 @@ exports.signin = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).send({ message: 'User Not found.' });
+      return res.status(404).send({ message: "User Not found." });
     }
 
-    const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+    const passwordIsValid = bcrypt.compareSync(
+      req.body.password,
+      user.password
+    );
 
     if (!passwordIsValid) {
       return res.status(401).send({
         accessToken: null,
-        message: 'Invalid Password!',
+        message: "Invalid Password!",
       });
     }
-
-    
 
     const token = jwt.sign({ id: user.id }, config.secret, {
       expiresIn: config.jwtExpiration,
@@ -292,7 +280,7 @@ exports.signin = async (req, res) => {
 
     user.getRoles().then((roles) => {
       for (let i = 0; i < roles.length; i++) {
-        permissions.push('ROLE_' + roles[i].name.toUpperCase());
+        permissions.push("ROLE_" + roles[i].name.toUpperCase());
       }
 
       res.status(200).send({
@@ -314,39 +302,39 @@ exports.signin = async (req, res) => {
 };
 
 exports.refreshToken = async (req, res) => {
-  const { refreshToken: requestToken } = req.body
+  const { refreshToken: requestToken } = req.body;
   if (requestToken == null) {
-    return res.status(403).json({ message: 'Refresh Token is required!' })
+    return res.status(403).json({ message: "Refresh Token is required!" });
   }
   try {
     let refreshToken = await RefreshToken.findOne({
       where: { token: requestToken },
-    })
-    console.log(refreshToken)
+    });
+    console.log(refreshToken);
     if (!refreshToken) {
-      res.status(403).json({ message: 'Refresh token is not in database!' })
-      return
+      res.status(403).json({ message: "Refresh token is not in database!" });
+      return;
     }
     if (RefreshToken.verifyExpiration(refreshToken)) {
-      RefreshToken.destroy({ where: { id: refreshToken.id } })
+      RefreshToken.destroy({ where: { id: refreshToken.id } });
 
       res.status(403).json({
-        message: 'Refresh token was expired. Please make a new signin request',
-      })
-      return
+        message: "Refresh token was expired. Please make a new signin request",
+      });
+      return;
     }
-    const user = await refreshToken.getUser()
+    const user = await refreshToken.getUser();
     let newAccessToken = jwt.sign({ id: user.id }, config.secret, {
       expiresIn: config.jwtExpiration,
-    })
+    });
     return res.status(200).json({
       accessToken: newAccessToken,
       refreshToken: refreshToken.token,
-    })
+    });
   } catch (err) {
-    return res.status(500).send({ message: err })
+    return res.status(500).send({ message: err });
   }
-}
+};
 
 // verifier email pour se connecter
 exports.verifyEmail = async (req, res) => {
@@ -357,28 +345,29 @@ exports.verifyEmail = async (req, res) => {
     const user = await User.findOne({ where: { verificationToken: token } });
 
     if (!user) {
-      return res.status(404).json({ message: 'Invalid verification token.' });
+      return res.status(404).json({ message: "Invalid verification token." });
     }
 
     // Check if the user is already verified
     if (user.isVerified) {
-      return res.status(400).json({ message: 'User is already verified.' });
+      return res.status(400).json({ message: "User is already verified." });
     }
 
     // Update user as verified
     await user.update({ isVerified: true, verificationToken: null });
 
     // Customize the response based on your needs
-    res.json({ message: 'Email verification successful. You can now proceed with your custom action.' });
+    res.json({
+      message:
+        "Email verification successful. You can now proceed with your custom action.",
+    });
 
     // Add your custom logic here, for example, redirecting to a specific page or triggering some other action.
-
   } catch (error) {
     // Handle errors gracefully
     res.status(500).json({ error: error.message });
   }
 };
-
 
 //verifier verifier ou nn son mail
 exports.checkVerificationStatus = async (req, res) => {
@@ -389,7 +378,7 @@ exports.checkVerificationStatus = async (req, res) => {
     const user = await User.findByPk(userId);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(404).json({ message: "User not found." });
     }
 
     // Check if the user is verified
@@ -397,15 +386,11 @@ exports.checkVerificationStatus = async (req, res) => {
 
     // Customize the response based on your needs
     res.json({ isVerified });
-
   } catch (error) {
     // Handle errors gracefully
     res.status(500).json({ error: error.message });
   }
 };
-
-
-
 
 exports.forgotPassword = async (req, res) => {
   try {
@@ -415,20 +400,20 @@ exports.forgotPassword = async (req, res) => {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(404).json({ message: "User not found." });
     }
 
     // Generate a password reset token and save it in the database
-    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetToken = crypto.randomBytes(32).toString("hex");
     const resetTokenExpiration = Date.now() + 3600000; // Token is valid for 1 hour
 
     await user.update({ resetToken, resetTokenExpiration });
 
     // Send a password reset email
-    const resetLink = `http://localhost:5173/login/${resetToken}`;
+    const resetLink = `http://localhost:3000/login/${resetToken}`;
     await sendPasswordResetEmail(user.email, resetLink);
 
-    res.json({ message: 'Password reset email sent successfully.' });
+    res.json({ message: "Password reset email sent successfully." });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -448,7 +433,9 @@ exports.resetPassword = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(400).json({ message: 'Invalid or expired reset token.' });
+      return res
+        .status(400)
+        .json({ message: "Invalid or expired reset token." });
     }
 
     // Update the user's password and clear the reset token fields
@@ -458,7 +445,7 @@ exports.resetPassword = async (req, res) => {
       resetTokenExpiration: null,
     });
 
-    res.json({ message: 'Password reset successful.' });
+    res.json({ message: "Password reset successful." });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -467,7 +454,7 @@ exports.resetPassword = async (req, res) => {
 // email pour verifier le re reset password
 async function sendPasswordResetEmail(email, resetLink) {
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
@@ -477,7 +464,7 @@ async function sendPasswordResetEmail(email, resetLink) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Password Reset',
+    subject: "Password Reset",
     html: `Click <a href="${resetLink}">here</a> to reset your password.`,
   };
 

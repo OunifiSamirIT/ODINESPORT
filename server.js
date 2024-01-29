@@ -3,8 +3,9 @@ const cors = require('cors')
 const app = express()
 require('dotenv').config();
 
+
 var corsOptions = {
-  origin: 'http://localhost:3000',
+ origin: '*'
 }
 app.use(cors(corsOptions))
 // parse requests of content-type - application/json
@@ -78,8 +79,11 @@ replyRouter(app)
 const userRouter = require('./app/routes/user.routes')
 userRouter(app)
 
-const playerRouter = require('./app/routes/player.routes')
+const playerRouter = require('./app/routes/player.routes');
+const otherRouter = require('./app/routes/other.routes');
+const bodyParser = require('body-parser');
 playerRouter(app)
+otherRouter(app)
 // set port, listen for requests
 const PORT = process.env.PORT || 8088
 app.listen(PORT, '0.0.0.0', () => {
