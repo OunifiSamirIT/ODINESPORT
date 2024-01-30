@@ -173,6 +173,8 @@ exports.signup = async (req, res) => {
           iduser: user.id,
           totalTeam: req.body.totalTeam,
           countryCoachedIn: req.body.countryCoachedIn,
+          footballTactic: req.body.footballTactic,
+          
           skills: req.body.skills,
         });
       } else if (profil === "agent") {
@@ -217,9 +219,9 @@ exports.signup = async (req, res) => {
       await user.setRoles([7]);
     }
 
-    res.status(200).send({
+    res.json({
       message:
-        "User was registered successfully. Please check your email for verification.",
+        "Email verification successful. You can now proceed with your custom action."
     });
   } catch (err) {
     console.error(err);
@@ -337,6 +339,38 @@ exports.refreshToken = async (req, res) => {
 };
 
 // verifier email pour se connecter
+// exports.verifyEmail = async (req, res) => {
+//   try {
+//     const { token } = req.query;
+
+//     // Find user by verificationToken
+//     const user = await User.findOne({ where: { verificationToken: token } });
+
+//     if (!user) {
+//       return res.status(404).json({ message: "Invalid verification token." });
+//     }
+
+//     // Check if the user is already verified
+//     if (user.isVerified) {
+//       return res.status(400).json({ message: "User is already verified." });
+//     }
+
+//     // Update user as verified
+//     await user.update({ isVerified: true, verificationToken: null });
+//     res.redirect("http://localhost:3000/login");
+//     // Customize the response based on your needs
+//     res.json({
+//       message:
+//         "Email verification successful. You can now proceed with your custom action.",
+      
+//     });
+
+//     // Add your custom logic here, for example, redirecting to a specific page or triggering some other action.
+//   } catch (error) {
+//     // Handle errors gracefully
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 exports.verifyEmail = async (req, res) => {
   try {
     const { token } = req.query;
@@ -356,13 +390,11 @@ exports.verifyEmail = async (req, res) => {
     // Update user as verified
     await user.update({ isVerified: true, verificationToken: null });
 
-    // Customize the response based on your needs
-    res.json({
-      message:
-        "Email verification successful. You can now proceed with your custom action.",
-    });
+    // Redirect to the login page
+    return res.redirect("http://localhost:3000/login");
 
-    // Add your custom logic here, for example, redirecting to a specific page or triggering some other action.
+    // No need for the JSON response here
+
   } catch (error) {
     // Handle errors gracefully
     res.status(500).json({ error: error.message });

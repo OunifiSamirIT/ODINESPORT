@@ -84,6 +84,12 @@ const otherRouter = require('./app/routes/other.routes');
 const bodyParser = require('body-parser');
 playerRouter(app)
 otherRouter(app)
+
+
+const albumRouter = require('./app/routes/album.routes')
+albumRouter(app)
+const eventRouter = require('./app/routes/event.routes')
+eventRouter(app)
 // set port, listen for requests
 const PORT = process.env.PORT || 8088
 app.listen(PORT, '0.0.0.0', () => {

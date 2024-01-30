@@ -6,6 +6,12 @@ module.exports = (sequelize, Sequelize) => {
     countryCoachedIn: {
       type: Sequelize.STRING,
     },
+    footballTactic: {
+      type: Sequelize.STRING,
+    },
+
+
+    
      //tjs a la fin de process de register
      skills: {
       type: Sequelize.STRING,
