@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }))
 const db = require('./app/models')
 const Role = db.role
 db.sequelize.sync().then(() => {
-  console.log('Resync Db ...')
+  console.log('Resync Db done ...')
   // initial()
 })
 
