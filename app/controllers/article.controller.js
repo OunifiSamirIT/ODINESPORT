@@ -50,7 +50,7 @@ exports.create = async (req, res) => {
 
 
 
-      var imgsrc = "https://odine-sport.com/uploads/" + req.file.filename;
+      var imgsrc = "http://localhost:8088/uploads/" + req.file.filename;
       Article.create({
         titre: req.body.titre,
         description: req.body.description,
