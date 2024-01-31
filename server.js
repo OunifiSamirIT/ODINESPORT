@@ -57,7 +57,7 @@ function initial() {
  
 }
 
-app.get('/', (req, res) => {
+app.get('/api/welcome', (req, res) => {
   res.json({ message: 'Welcome!' })
 }) //jgjj
 
@@ -90,7 +90,6 @@ const albumRouter = require('./app/routes/album.routes')
 albumRouter(app)
 const eventRouter = require('./app/routes/event.routes')
 eventRouter(app)
-// set port, listen for requests
 const PORT = process.env.PORT || 8088
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}.`)
