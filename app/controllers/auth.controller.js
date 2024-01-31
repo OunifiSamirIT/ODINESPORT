@@ -21,105 +21,7 @@ var bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
-// exports.signup = (req, res) => {
-//   // Save User to Database
-//  // var imgsrc = "http://localhost:8088/uploads/" + req.file.filename;
-//  const verificationToken = crypto.randomBytes(32).toString('hex');
 
-//   User.create({
-//     nom: req.body.nom,
-//     prenom: req.body.prenom,
-//     date_naissance: req.body.date_naissance,
-//     gender: req.body.gender,
-//     nationality: req.body.nationality,
-//     countryresidence: req.body.countryresidence,
-//     cityresidence: req.body.cityresidence,
-//     tel: req.body.tel,
-//     email: req.body.email,
-//     login: req.body.login,
-//     // image: imgsrc,
-//     profil: req.body.profil,
-//     password: bcrypt.hashSync(req.body.password, 8),
-//   })
-//     .then((user) => {
-//       console.log('=============user=======================')
-//       console.log(user.id)
-//       console.log('====================================')
-//       if (req.body.roles) {
-//         Role.findAll({
-//           where: {
-//             name: {
-//               [Op.or]: req.body.roles,
-//             },
-//           },
-//         }).then((roles) => {
-//           const profil = roles[0]['name']
-//           if (profil === 'player') {
-//             console.log('userid : ', user.id)
-//             Player.create({
-//               iduser: user.id,
-//               height: req.body.height,
-//               weight: req.body.weight,
-//               strongSkill: req.body.strongSkill,
-//               positionPlay: req.body.positionPlay,
-//               positionSecond: req.body.positionSecond,
-//               skillsInProfile: req.body.skillsInProfile,
-//             }).then(console.log('player insere'))
-//           }
-//           if (profil === 'coach') {
-//             console.log('userid : ', user.id)
-//             Coach.create({
-//               iduser: user.id,
-//               totalTeam: req.body.totalTeam,
-//               countryCoachedIn: req.body.countryCoachedIn,
-//               skills: req.body.skills,
-
-//             }).then(console.log('coach insere'))
-//           }
-//           if (profil === 'agent') {
-//             console.log('userid : ', user.id)
-
-//             // Check the value of typeresponsable
-//             if (req.body.typeresponsable === 'club') {
-//               Agent.create({
-//                 iduser: user.id,
-//                 totalCareerTransfers: req.body.totalCareerTransfers,
-//                 clubCovered: req.body.clubCovered,
-//                 skills: req.body.skills,
-//               }).then(console.log('agent insere'))
-//             } else if (req.body.typeresponsable === 'players') {
-//               Agent.create({
-//                 iduser: user.id,
-//                 totalCareerTransfers: req.body.totalCareerTransfers,
-//                 typeresponsable: req.body.typeresponsable,
-
-//                 totalPlayer: req.body.totalPlayer,
-//                 skills: req.body.skills,
-//               }).then(console.log('agent insere'))
-//             }
-//           }
-//           // completer les autres profil et changer la fonction par switch a la place de if
-//           // else {
-//           //   console.log('userid : ', user.id)
-//           //   Advertiser.create({
-//           //     iduser: user.id,
-//           //     entreprise: req.body.entreprise,
-//           //   }).then(console.log('advertiser insere'))
-//           // }
-//           user.setRoles(roles).then(() => {
-//             res.send({ message: 'User was registered successfully!' })
-//           })
-//         })
-//       } else {
-//         user.setRoles([7]).then(() => {
-//           res.send({ message: 'User was registered successfully!' })
-//         })
-//       }
-//     })
-//     .catch((err) => {
-//       res.status(500).send({ message: err.message })
-//     })
-// }
 
 exports.signup = async (req, res) => {
   try {
@@ -142,7 +44,7 @@ exports.signup = async (req, res) => {
     });
 
     // Send verification email
-    const verificationLink = `http://localhost:8088/api/auth/verify-email?token=${verificationToken}`;
+    const verificationLink = `https://odine-sport.com/api/auth/verify-email?token=${verificationToken}`;
     await sendVerificationEmail(user.email, verificationLink);
 
     if (req.body.roles) {
@@ -391,7 +293,7 @@ exports.verifyEmail = async (req, res) => {
     await user.update({ isVerified: true, verificationToken: null });
 
     // Redirect to the login page
-    return res.redirect("http://localhost:3000/login");
+    return res.redirect("https://odine-sport.com/login");
 
     // No need for the JSON response here
 
@@ -442,7 +344,7 @@ exports.forgotPassword = async (req, res) => {
     await user.update({ resetToken, resetTokenExpiration });
 
     // Send a password reset email
-    const resetLink = `http://localhost:3000/login/${resetToken}`;
+    const resetLink = `https://odine-sport.com/login/${resetToken}`;
     await sendPasswordResetEmail(user.email, resetLink);
 
     res.json({ message: "Password reset email sent successfully." });
