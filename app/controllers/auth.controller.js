@@ -43,7 +43,6 @@ exports.signup = async (req, res) => {
       verificationToken: verificationToken,
     });
 
-    // Send verification email
     const verificationLink = `https://odine-sport.com/api/auth/verify-email?token=${verificationToken}`;
     await sendVerificationEmail(user.email, verificationLink);
 
@@ -123,7 +122,7 @@ exports.signup = async (req, res) => {
 
     res.json({
       message:
-        "Email verification successful. You can now proceed with your custom action."
+        "Email verification successful. You can now proceed with your custom action now."
     });
   } catch (err) {
     console.error(err);
