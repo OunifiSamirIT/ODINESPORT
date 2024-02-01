@@ -50,7 +50,7 @@ exports.create = async (req, res) => {
 
 
 
-      var imgsrc = "http://localhost:8088/uploads/" + req.file.filename;
+      var imgsrc = "/uploads/" + req.file.filename;
       Article.create({
         titre: req.body.titre,
         description: req.body.description,
@@ -211,14 +211,14 @@ exports.update = async (req, res) => {
     // Handle updating image
     if (req.file && req.file.mimetype.startsWith('image')) {
       // Assuming you have a directory named 'uploads' for storing images
-      const imgsrc = "http://localhost:8088/uploads/" + req.file.filename;
+      const imgsrc = "/uploads/" + req.file.filename;
       article.image = imgsrc || article.image;
     }
 
     // Handle updating video
     if (req.file && req.file.mimetype.startsWith('video')) {
       // Assuming you have a directory named 'uploads' for storing videos
-      const videoSrc = "http://localhost:8088/uploads/" + req.file.filename;
+      const videoSrc = "/uploads/" + req.file.filename;
       article.video = videoSrc;
     }
 

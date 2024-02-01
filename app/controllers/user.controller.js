@@ -124,7 +124,7 @@ exports.update = async (req, res) => {
     // Handle updating profile picture
     if (req.file && req.file.mimetype.startsWith('image')) {
       // Assuming you have a directory named 'uploads' for storing images
-      const imgSrc = "https://odine-sport.com/uploads/" + req.file.filename;
+      const imgSrc = "/uploads/" + req.file.filename;
       user.image = imgSrc;
     }
 
@@ -145,7 +145,7 @@ exports.update = async (req, res) => {
 
 exports.changerImage = (req, res) => {
   const id = req.params.id
-  var imgsrc = 'https://odine-sport.com/uploads/' + req.file.filename
+  var imgsrc = '/uploads/' + req.file.filename
   User.update(
     {
       image: imgsrc || 'file-1666352996111.jpg',

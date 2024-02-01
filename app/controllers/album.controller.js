@@ -28,7 +28,7 @@ exports.createAlbum = async (req, res) => {
             const images = req.files.map(file => {
                 return({
                     album_id: album.dataValues.id,
-                    image_url: "http://localhost:8088/uploads/" + file.filename,
+                    image_url: "/uploads/" + file.filename,
                 })
             });
 
