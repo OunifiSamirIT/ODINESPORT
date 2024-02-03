@@ -85,7 +85,12 @@ const bodyParser = require('body-parser');
 playerRouter(app)
 otherRouter(app)
 app.use(bodyParser.json({ limit: '100mb' }));
-
+// app.use( bodyParser.json({limit: '50mb'}) );
+app.use(bodyParser.urlencoded({
+  limit: '1000mb',
+  extended: true,
+  parameterLimit:100000
+}));
 
 const albumRouter = require('./app/routes/album.routes')
 albumRouter(app)
