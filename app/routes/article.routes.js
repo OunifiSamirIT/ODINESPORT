@@ -18,7 +18,9 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 1024 * 1024 * 100 }, // 100MB limit
 });
-
+app.use(upload.single('file'));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 module.exports = function (app) {
   app.get('/api/articles/:id', controller.findOne)
   app.get('/api/articles/', controller.findAll)
