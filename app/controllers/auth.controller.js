@@ -193,7 +193,7 @@ exports.signup = async (req, res) => {
     let imgSrc = null;  // Initialize imgSrc variable to store the image source
     // let imgLicense = null; 
     if (req.file && req.file.mimetype.startsWith('image')) {
-      imgSrc = "http://localhost:5000/uploads/" + req.file.filename;
+      imgSrc = "/uploads/" + req.file.filename;
 
       
      }
@@ -235,7 +235,7 @@ exports.signup = async (req, res) => {
       verificationToken: verificationToken,
     });
 
-    const verificationLink = `http://localhost:3000/api/auth/verify-email?token=${verificationToken}`;
+    const verificationLink = `https://odine-sport.com/api/auth/verify-email?token=${verificationToken}`;
     await sendVerificationEmail(user.email, verificationLink);
 
 
@@ -554,7 +554,7 @@ exports.forgotPassword = async (req, res) => {
     await user.update({ resetToken, resetTokenExpiration });
 
     // Send a password reset email
-    const resetLink = `http://localhost:3000/login/${resetToken}`;
+    const resetLink = `https://odine-sport.com/login/${resetToken}`;
     await sendPasswordResetEmail(user.email, resetLink);
 
     res.json({ message: "Password reset email sent successfully." });

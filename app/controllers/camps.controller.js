@@ -41,7 +41,7 @@ exports.createAlbumcamps = async (req, res) => {
             const imagescamps = req.files.map(file => {
                 return({
                     album_id: camps.dataValues.id,
-                    image_url: "http://localhost:5000/uploads/" + file.filename,
+                    image_url: "/uploads/" + file.filename,
                 })
             });
 
