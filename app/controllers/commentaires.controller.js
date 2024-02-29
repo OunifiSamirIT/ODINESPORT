@@ -125,22 +125,68 @@ exports.deleteAll = (req, res) => {
     });
 };
 
+// exports.findCommentsOfArticle = async (req, res) => {
+//   const articleId = req.params.articleId;
+//   const data = await sql
+//     .query(
+//       `SELECT users.id as user_id, users.nom as user_nom, users.prenom as user_prenom, users.login as user_login, commentaires.id as comm_id, commentaires.description as comm_desc, commentaires.createdAt, commentaires.updatedAt FROM users, commentaires WHERE users.id = commentaires.userId and commentaires.articleId = ${articleId}`
+//     )
+//     .then((data) => {
+//       console.log("data : ", data[0]);
+//       res.send(data[0]);
+//     })
+//     .catch((err) => {
+//       res.status(500).send({
+//         message: err.message || "Some error occurred while retrieving membres.",
+//       });
+//     });
+
+//     Commentaires.count({
+//       where: {
+//         articleId: {
+//           [Op.eq]: articleId,
+//         },
+//       },
+//     })
+//       .then((count) => {
+//         res.send({ count });
+//       })
+//       .catch((err) => {
+//         res.status(500).send({
+//           message: err.message || 'Error occurred while counting comments.',
+//         });
+//       });
+// };
+
 exports.findCommentsOfArticle = async (req, res) => {
   const articleId = req.params.articleId;
-  const data = await sql
-    .query(
+
+  try {
+    const commentsData = await sql.query(
       `SELECT users.id as user_id, users.nom as user_nom, users.prenom as user_prenom, users.login as user_login, commentaires.id as comm_id, commentaires.description as comm_desc, commentaires.createdAt, commentaires.updatedAt FROM users, commentaires WHERE users.id = commentaires.userId and commentaires.articleId = ${articleId}`
-    )
-    .then((data) => {
-      console.log("data : ", data[0]);
-      res.send(data[0]);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving membres.",
-      });
+    );
+
+    const commentCount = await Commentaires.count({
+      where: {
+        articleId: {
+          [Op.eq]: articleId,
+        },
+      },
     });
+
+    const response = {
+      commentsData: commentsData[0],
+      commentCount: commentCount,
+    };
+
+    res.send(response);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while retrieving comments.",
+    });
+  }
 };
+
 // exports.findCommentsOfArticle = async (req, res) => {
 //   const articleId = req.params.articleId;
 //   const data = await sql

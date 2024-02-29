@@ -14,9 +14,9 @@ var storage = multer.diskStorage({
     );
   },
 });
-const upload = multer({
+
+var upload = multer({
   storage: storage,
-  limits: { fileSize: 1024 * 1024 * 100 }, // 100MB limit
 });
 
 module.exports = function (app) {
@@ -29,6 +29,7 @@ module.exports = function (app) {
   app.delete('/api/articles/', controller.deleteAll)
   app.delete('/api/articles/:id', controller.delete)
   app.post('/api/articles/like/:articleId', controller.addLikeToArticle);
+  app.delete('/api/articles/dislike/:articleId', controller.removeLikeFromArticle);
   // app.get('/api/articles/:id/likes', controller.getLikesForArticle);
   app.get('/api/articles/gallery/:id', controller.displayGallery);
   app.get('/api/articles/byUser/:userId', controller.findByUserId);

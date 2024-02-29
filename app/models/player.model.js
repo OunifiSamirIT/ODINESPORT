@@ -9,9 +9,7 @@ module.exports = (sequelize, Sequelize) => {
     PiedFort: {
       type: Sequelize.STRING,
     },
-    Licence: {
-      type: Sequelize.STRING,
-    },
+   
     positionPlay: {
       type: Sequelize.STRING,
     },
@@ -25,7 +23,15 @@ module.exports = (sequelize, Sequelize) => {
     NumeroWhatsup: {
       type: Sequelize.STRING,
     },
-   
+    interets: {
+      type: Sequelize.STRING,
+    },
+    champsoptionelle: {
+      type: Sequelize.STRING,
+    },
+    Licence: {
+      type: Sequelize.STRING,
+    },
     iduser: {
       type: Sequelize.INTEGER,
       allowNull: false,

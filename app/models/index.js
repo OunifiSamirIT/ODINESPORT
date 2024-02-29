@@ -20,6 +20,10 @@ db.sequelize = sequelize
 
 db.album = require('./album.model.js')(sequelize, Sequelize);
 db.imageAlbum = require('./albumImages.model.js')(sequelize, Sequelize);
+
+
+db.camps = require('./camps.model.js')(sequelize, Sequelize);
+db.imageAlbumcamps = require('./campsAlbum.js')(sequelize, Sequelize);
 //Event
 db.event = require('./event.model.js')(sequelize,Sequelize);
 db.imageEvent = require('./imageEvent.model.js')(sequelize, Sequelize);
@@ -36,6 +40,8 @@ db.eventApplication = require('./EventApplication.model.js')(sequelize, Sequeliz
 
 
 db.user = require('./user.model.js')(sequelize, Sequelize);
+db.admin = require('./admin.model.js')(sequelize, Sequelize);
+
 db.player = require('./player.model.js')(sequelize, Sequelize);
 db.coach = require('./coach.model.js')(sequelize, Sequelize);
 db.agent = require('./agent.model.js')(sequelize, Sequelize);
@@ -56,6 +62,7 @@ db.Reply = Reply;
 // Define associations after all models are loaded
 db.Commentaires = require('./commentaires.model.js')(sequelize, Sequelize);
 db.Article = require('./article.model.js')(sequelize, Sequelize);
+db.Likes = require('./likes.model.js')(sequelize, Sequelize);
 
 
 
@@ -64,6 +71,15 @@ db.Article = require('./article.model.js')(sequelize, Sequelize);
 db.album.hasMany(db.imageAlbum , {
   foreignKey : 'album_id',
 });
+
+
+db.camps.hasMany(db.imageAlbumcamps , {
+  foreignKey : 'album_id',
+});
+
+
+
+
 //event relation
 db.event.hasMany(db.imageEvent , {
   foreignKey : 'event_id',

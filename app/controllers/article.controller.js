@@ -50,7 +50,7 @@ exports.create = async (req, res) => {
 
 
 
-      var imgsrc = "/uploads/" + req.file.filename;
+      var imgsrc = "http://localhost:5000/uploads/" + req.file.filename;
       Article.create({
         titre: req.body.titre,
         description: req.body.description,
@@ -211,14 +211,14 @@ exports.update = async (req, res) => {
     // Handle updating image
     if (req.file && req.file.mimetype.startsWith('image')) {
       // Assuming you have a directory named 'uploads' for storing images
-      const imgsrc = "/uploads/" + req.file.filename;
+      const imgsrc = "http://localhost:5000/uploads/" + req.file.filename;
       article.image = imgsrc || article.image;
     }
 
     // Handle updating video
     if (req.file && req.file.mimetype.startsWith('video')) {
       // Assuming you have a directory named 'uploads' for storing videos
-      const videoSrc = "/uploads/" + req.file.filename;
+      const videoSrc = "http://localhost:5000/uploads/" + req.file.filename;
       article.video = videoSrc;
     }
 
@@ -318,6 +318,79 @@ exports.addLikeToArticle = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
+// Add like
+exports.addLikeToArticle = async (req, res) => {
+  const { articleId } = req.params;
+  const { userId } = req.body;
+
+  if (!articleId || !userId) {
+    return res.status(400).json({ success: false, message: 'Invalid input data' });
+  }
+
+  try {
+    const article = await Article.findByPk(articleId);
+    const user = await User.findByPk(userId);
+
+    if (!article || !user) {
+      return res.status(404).json({ success: false, message: 'Article or user not found' });
+    }
+
+    // Check if the user has already liked the article
+    const existingLike = await UserLikes.findOne({
+      where: { userId, articleId },
+      attributes: ['userId', 'articleId'], // Specify the primary key columns
+    });
+
+    if (existingLike) {
+      return res.status(400).json({ success: false, message: 'User has already liked this article' });
+    }
+
+    // Add a like to the article
+    await UserLikes.create({ userId, articleId });
+    await article.increment('likes'); // Increment the likes count in the Article model
+
+    return res.status(200).json({ success: true, message: 'Like added successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
+// Remove like
+exports.removeLikeFromArticle = async (req, res) => {
+  const { articleId } = req.params;
+  const { userId } = req.body;
+
+  if (!articleId || !userId) {
+    return res.status(400).json({ success: false, message: 'Invalid input data' });
+  }
+
+  try {
+    // Check if the like exists
+    const existingLike = await UserLikes.findOne({
+      where: { userId, articleId },
+    });
+
+    if (!existingLike) {
+      return res.status(400).json({ success: false, message: 'Like not found' });
+    }
+
+    // Remove the like
+    await existingLike.destroy();
+
+    // Decrement the likes count in the Article model
+    const article = await Article.findByPk(articleId);
+    if (article) {
+      await article.decrement('likes');
+    }
+
+    return res.status(200).json({ success: true, message: 'Like removed successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
 
 
 // exports.getLikesForArticle = async (req, res) => {

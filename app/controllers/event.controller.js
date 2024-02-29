@@ -34,7 +34,7 @@ exports.createEvent = async (req, res) => {
         console.log(event)
         const images = {
                 event_id: event.dataValues.id,
-                image_url: "https://odine-sport.com/uploads/album/" + req.file.filename,
+                image_url: "http://localhost:5000/uploads/album/" + req.file.filename,
         }
         console.log('sfgsd' , images)
         try {

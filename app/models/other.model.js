@@ -10,6 +10,15 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
       allowNull: false,
     },
+    interets: {
+      type: Sequelize.STRING,
+    },
+    champsoptionelle: {
+      type: Sequelize.STRING,
+    },
+    Licence: {
+      type: Sequelize.STRING,
+    },
   })
   return Other
 }

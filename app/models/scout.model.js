@@ -13,7 +13,15 @@ module.exports = (sequelize, Sequelize) => {
       skillsscout: {
         type: Sequelize.STRING,
       },
-    
+      interets: {
+        type: Sequelize.STRING,
+      },
+      champsoptionelle: {
+        type: Sequelize.STRING,
+      },
+      Licence: {
+        type: Sequelize.STRING,
+      },
   })
   return Scout
 }

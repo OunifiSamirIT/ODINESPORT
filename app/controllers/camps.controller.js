@@ -1,14 +1,15 @@
+const { response } = require("express");
 const db = require("../models");
-const Album = db.album;
-const Images = db.imageAlbum;
+const Camps = db.camps;
+const Imagescamps = db.imageAlbumcamps;
 const Op = db.Sequelize.Op;
 const sql = db.sequelize;
 
-exports.createAlbum = async (req, res) => {
+exports.createAlbumcamps = async (req, res) => {
      // Handle the uploaded file if needed
         const data = req.body;
         try{
-            if (!data.userID) {
+            if (!data.userId) {
                 return res.status(400).send({
                     error : "please authenticate to be able to create an event"
                 })
@@ -19,27 +20,38 @@ exports.createAlbum = async (req, res) => {
                 })
             }
 
-            const album = await Album.create({
+
+
+
+
+
+
+            const camps = await Camps.create({
                 album_name: req.body.AlbumName,
                 description: req.body. Description,
-                userID: req.body.userID,
+                userId: req.body.userId,
+                Duree: req.body.Duree,
+                payscamps: req.body.payscamps,
+                prix: req.body.prix,
+                date_debut: req.body.date_debut,
+                date_fin: req.body.date_fin
             })
-            console.log(album.albums)
-            const images = req.files.map(file => {
+
+            console.log(camps.albums)
+            const imagescamps = req.files.map(file => {
                 return({
-                    album_id: album.dataValues.id,
+                    album_id: camps.dataValues.id,
                     image_url: "http://localhost:5000/uploads/" + file.filename,
                 })
             });
 
             try {
                 // Bulk create the images
-                await Images.bulkCreate(images).then(() => {
+                await Imagescamps.bulkCreate(imagescamps).then(() => {
                    console.log('done')
                    return res.status(200).send({
                     error : "ok "
-                })  
-                });
+                })                });
             } catch (error) {
                 console.error("Error creating images:", error);
                 // Handle the error as needed
@@ -52,8 +64,8 @@ exports.createAlbum = async (req, res) => {
 
 exports.getAll = async (req, res) => {
 
-    const albumWithImages = await Album.findAll({
-        include: { model: Images },
+    const albumWithImages = await Camps.findAll({
+        include: { model: Imagescamps },
     });
     return res.status(200).send({
         message : 'done' ,
@@ -63,9 +75,9 @@ exports.getAll = async (req, res) => {
     exports.getById = async (req, res) => {
         const { id } = req.params;
         console.log(id)
-        const singleAlbumWithImages = await Album.findOne({
+        const singleAlbumWithImages = await Camps.findOne({
             where  : { id : id},
-            include: { model: Images },
+            include: { model: Imagescamps },
         })
 
     return res.status(200).send({

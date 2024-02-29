@@ -14,7 +14,7 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
   }).then((user) => {
     if (user) {
       res.status(400).send({
-        message: 'Failed! login is already in use!',
+        message: 'Inscreption échouée! Cette UserName est déjà utilisée!',
       })
       return
     }
@@ -26,7 +26,7 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
     }).then((user) => {
       if (user) {
         res.status(400).send({
-          message: 'Failed! Email is already in use!',
+          message: 'Inscreption échouée! Cette adresse mail est déjà utilisée!',
         })
         return
       }

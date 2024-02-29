@@ -124,7 +124,7 @@ exports.update = async (req, res) => {
     // Handle updating profile picture
     if (req.file && req.file.mimetype.startsWith('image')) {
       // Assuming you have a directory named 'uploads' for storing images
-      const imgSrc = "/uploads/" + req.file.filename;
+      const imgSrc = "http://localhost:5000/uploads/" + req.file.filename;
       user.image = imgSrc;
     }
 
@@ -145,7 +145,7 @@ exports.update = async (req, res) => {
 
 exports.changerImage = (req, res) => {
   const id = req.params.id
-  var imgsrc = '/uploads/' + req.file.filename
+  var imgsrc = 'http://localhost:5000/uploads/' + req.file.filename
   User.update(
     {
       image: imgsrc || 'file-1666352996111.jpg',
@@ -334,3 +334,39 @@ exports.getFriendRequests = async (req, res) => {
 
 
 
+exports.getFriendRequestsById = async (req, res) => {
+  const userId = req.params.id;
+  const receiverId = req.params.recieverId;
+
+  try {
+    // Find record based on senderId and receiverId
+    const record = await db.friend_requests.findOne({
+      where: {
+        senderId: userId,
+        receiverId: receiverId,
+      }
+    });
+
+    // If record is found, return true, otherwise false
+    res.json({ exists: record  });
+
+    // if (!friendRequests) {
+    //   return res.status(404).send({
+    //     message: `Cannot find User with id=${userId}.`,
+    //   });
+    // }
+
+    // Check if there are any friend requests with the status 'pending' and receiver has content
+    // if (friendRequests.receiver && friendRequests.receiver.length > 0) {
+    //   res.send(friendRequests);
+    // }else{
+    //   return res.send({message : "nothinbg"})
+    // }
+    // No else block here to skip sending a response if there are no pending friend requests
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({
+      message: 'Error fetching friend requests.',
+    });
+  }
+};

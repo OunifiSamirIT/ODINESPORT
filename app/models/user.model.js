@@ -7,13 +7,20 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     date_naissance: {
-      type: Sequelize.DATE,
+      type: Sequelize.STRING,
     },
     tel: {
       type: Sequelize.INTEGER,
     },
     email: {
       type: Sequelize.STRING,
+      allowNull: false, // Ensure the email is not null
+      validate: {
+        notEmpty: true, // Ensure the email is not an empty string
+        isEmail: {
+          msg: 'Invalid email format', // Custom error message for invalid email format
+        },
+      },
     },
     login: {
       type: Sequelize.STRING,
@@ -37,6 +44,27 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     image: {
+      type: Sequelize.STRING,
+    },
+    discreptionBio: {
+      type: Sequelize.STRING,
+    },
+    optionalattributs: {
+      type: Sequelize.STRING,
+    },
+    termesConditions: {
+      type: Sequelize.STRING,
+    },
+    partagehorsPL: {
+      type: Sequelize.STRING,
+    },
+    liensSM: {
+      type: Sequelize.STRING,
+    },
+    numWSup: {
+      type: Sequelize.STRING,
+    },
+    statuscompte: {
       type: Sequelize.STRING,
     },
     friends: {

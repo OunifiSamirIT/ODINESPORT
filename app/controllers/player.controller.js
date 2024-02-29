@@ -1,6 +1,7 @@
 const {users, player } = require('../models');
 const db = require("../models");
 const Player = db.player;
+const Agent = db.agent;
 const User = db.user;
 
 exports.getPlayerByUserId = (req, res) => {
@@ -39,7 +40,18 @@ exports.getPlayerByUserId = (req, res) => {
       });
   };
 
-
+  exports.getAllPlayersWithoutUser = (req, res) => {
+    Player.findAll()
+      .then((data) => {
+        res.send(data);
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: 'Error retrieving players',
+        });
+      });
+  };
+  
   // exports.updatePlayerByUserId = async (req, res) => {
   //   const userId = req.params.iduser;
   
@@ -105,4 +117,20 @@ exports.getPlayerByUserId = (req, res) => {
         message: 'Error updating player information.',
       });
     }
+  };
+
+
+
+  exports.getAllAgents = (req, res) => {
+    Agent.findAll({
+      include: [{ model: User, attributes: ['id', 'nom', 'email','prenom','date_naissance','tel','login','gender','nationality','countryresidence','cityresidence','profil','image'] }],
+    })
+      .then((data) => {
+        res.send(data);
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: 'Error retrieving players',
+        });
+      });
   };

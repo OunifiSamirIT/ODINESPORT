@@ -41,5 +41,7 @@ module.exports = function (app) {
   app.post('/api/user/:id/sendFriendRequest/:friendId', controller.sendFriendRequest);
   app.get('/api/user/:id/friend-requests', controller.getFriendRequests);
   app.put('/api/user/:iduser/updatePlayer', playerController.updatePlayerByUserId);
+  app.get('/api/user/:id/checkFriends/:recieverId', controller.getFriendRequestsById);
+
 
 }

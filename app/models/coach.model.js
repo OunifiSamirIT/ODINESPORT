@@ -9,7 +9,19 @@ module.exports = (sequelize, Sequelize) => {
     footballTactic: {
       type: Sequelize.STRING,
     },
+    ClubActuelCoach: {
+      type: Sequelize.STRING,
+    },
+    interets: {
+      type: Sequelize.STRING,
+    },
+    champsoptionelle: {
+      type: Sequelize.STRING,
+    },
 
+    Licence: {
+      type: Sequelize.STRING,
+    },
 
     
      //tjs a la fin de process de register

@@ -14,5 +14,7 @@ module.exports = function (app) {
   app.get('/api/player/:iduser', playerController.getPlayerByUserId);
 
   app.get('/api/players', playerController.getAllPlayers);
+  app.get('/api/allagents', playerController.getAllAgents);
+  app.get('/api/allplayers', playerController.getAllPlayersWithoutUser);
   app.put('/api/player/:iduser', playerController.updatePlayerByUserId);
 };

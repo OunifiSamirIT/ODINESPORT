@@ -3,6 +3,13 @@ module.exports = (sequelize, Sequelize) => {
         user_id: {
             type: Sequelize.STRING,
         },
+        email: {
+            type: Sequelize.STRING,
+        },
+        password: {
+            type: Sequelize.STRING,
+        },
+
     })
     return Admin
 }
