@@ -10,6 +10,6 @@ module.exports = function (app) {
   app.get('/api/likes/comment/:commentId/count', controller.countLikesForCommentWithEmoji);
     app.get('/api/likes/reply/:replyId/count', controller.countLikesForReplyWithEmoji);
     app.get('/api/likes/article/:articleId/count', controller.countLikesForArticleWithEmoji);
-    app.get('/api/likes/article/allLikes', controller.countLikesForAllArticles);
+    app.get('/api/likes/allLikes', controller.countLikesForAllArticles);
     app.get('/api/likes/comment/allLikes', controller.countLikesForAllComments);
 };
