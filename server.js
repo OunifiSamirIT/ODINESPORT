@@ -1,6 +1,8 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
+const bodyParser = require('body-parser');
+
 require('dotenv').config();
 
 
@@ -89,7 +91,6 @@ contactRouter(app);
 const searchRouter = require('./app/routes/search.route');
 searchRouter(app);
 
-
 const inscritcampsRouter = require('./app/routes/inscritcamps.routes')
 inscritcampsRouter(app)
 
@@ -100,12 +101,14 @@ coachRouter(app)
 
 const scoutRouter = require('./app/routes/scout.routes')
 scoutRouter(app)
+
 const userRouter = require('./app/routes/user.routes')
 userRouter(app)
 
 const playerRouter = require('./app/routes/player.routes');
 const otherRouter = require('./app/routes/other.routes');
 const bodyParser = require('body-parser');
+
 playerRouter(app)
 otherRouter(app)
 
@@ -114,8 +117,16 @@ const albumRouter = require('./app/routes/album.routes')
 albumRouter(app)
 const eventRouter = require('./app/routes/event.routes')
 eventRouter(app)
+app.use(bodyParser.json({ limit: '50mb' }));
+// app.use( bodyParser.json({limit: '50mb'}) );
+app.use(bodyParser.urlencoded({
+  limit: '50mb',
+  extended: true,
+  parameterLimit:50000
+}));
+ 
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 8088
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}.`)
    // initial()
