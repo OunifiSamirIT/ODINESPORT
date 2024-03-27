@@ -1,8 +1,8 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.addColumn('users', 'langueparlee', {
-      // type: Sequelize.STRING,
-      type: Sequelize.ARRAY(Sequelize.STRING), 
+       type: Sequelize.STRING,
+      // type: Sequelize.ARRAY(Sequelize.STRING), 
 
       allowNull: true, 
     });
