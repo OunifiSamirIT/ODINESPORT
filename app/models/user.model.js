@@ -46,6 +46,9 @@ module.exports = (sequelize, Sequelize) => {
     image: {
       type: Sequelize.STRING,
     },
+    langueparlee: {
+      type: Sequelize.STRING,
+    },
     discreptionBio: {
       type: Sequelize.STRING,
     },

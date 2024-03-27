@@ -82,6 +82,26 @@ const likesRouter = require('./app/routes/likes.routes')
 likesRouter(app)
 const campsRouter = require('./app/routes/camps.route')
 campsRouter(app)
+
+const AgentRouter = require('./app/routes/agent.routes');
+AgentRouter(app);
+
+const contactRouter = require('./app/routes/contact.router');
+contactRouter(app);
+const searchRouter = require('./app/routes/search.route');
+searchRouter(app);
+
+const inscritcampsRouter = require('./app/routes/inscritcamps.routes')
+inscritcampsRouter(app)
+
+const friendRequestRouter = require('./app/routes/friendRequest.routes')
+friendRequestRouter(app) 
+const coachRouter = require('./app/routes/coach.routes')
+coachRouter(app)
+
+const scoutRouter = require('./app/routes/scout.routes')
+scoutRouter(app)
+
 const userRouter = require('./app/routes/user.routes')
 userRouter(app)
 

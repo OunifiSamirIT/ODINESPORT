@@ -193,7 +193,7 @@ exports.signup = async (req, res) => {
     let imgSrc = null;  // Initialize imgSrc variable to store the image source
     // let imgLicense = null; 
     if (req.file && req.file.mimetype.startsWith('image')) {
-      imgSrc = "/uploads/" + req.file.filename;
+      imgSrc = "http://localhost:5000/uploads/" + req.file.filename;
 
       
      }
@@ -228,6 +228,10 @@ exports.signup = async (req, res) => {
       login: req.body.login,
       image: imgSrc,
       numWSup: req.body.numWSup,
+
+      //prefix ws + tel
+      optionalattributs : req.body.optionalattributs,
+
       profil: req.body.profil,
       termesConditions: req.body.termesConditions,
       partagehorsPL: req.body.partagehorsPL,
@@ -235,7 +239,7 @@ exports.signup = async (req, res) => {
       verificationToken: verificationToken,
     });
 
-    const verificationLink = `https://odine-sport.com/api/auth/verify-email?token=${verificationToken}`;
+    const verificationLink = `http://localhost:3000/api/auth/verify-email?token=${verificationToken}`;
     await sendVerificationEmail(user.email, verificationLink);
 
 
@@ -364,8 +368,10 @@ exports.signin = async (req, res) => {
     const user = await User.findOne({
       where: {
         [Op.or]: [
-          { login: req.body.login },
-          { email: req.body.login },
+          { login: req.body.identifier
+          },
+          { email: req.body.identifier
+          },
         ],
       },
     });
@@ -554,7 +560,7 @@ exports.forgotPassword = async (req, res) => {
     await user.update({ resetToken, resetTokenExpiration });
 
     // Send a password reset email
-    const resetLink = `https://odine-sport.com/login/${resetToken}`;
+    const resetLink = `http://localhost:3000/login/${resetToken}`;
     await sendPasswordResetEmail(user.email, resetLink);
 
     res.json({ message: "Password reset email sent successfully." });

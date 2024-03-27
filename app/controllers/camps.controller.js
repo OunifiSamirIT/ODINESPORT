@@ -72,6 +72,11 @@ exports.getAll = async (req, res) => {
         data : albumWithImages,
     })
 }
+
+
+
+
+
     exports.getById = async (req, res) => {
         const { id } = req.params;
         console.log(id)

@@ -1,7 +1,5 @@
 const { authJwt } = require('../middleware')
-const controller = require('../controllers/user.controller')
-
-const playerController = require('../controllers/player.controller');
+const controller = require('../controllers/requests.controller')
 
 
 const multer = require("multer");
@@ -31,14 +29,22 @@ module.exports = function (app) {
     )
     next()
   })
+//send fiend Request 
+app.post('/api/user/:id/sendFriendRequest/:friendId', controller.sendFriendRequest);
+//accept friend Request
+app.put('/api/user/:id/acceptFriend/:recieverId', controller.acceptFriendRequest);
+//delete friend Request 
+app.delete('/api/user/:id/delete/:recieverId', controller.deleteFriendRequest);
+//get All Accepted Friend
+app.get('/api/user/:id/getFriends', controller.getFriends);
+//get all Pending Frinds
+app.get('/api/user/:id/getPendingFriends', controller.getPendingFriends);
+//check if already friends
+app.get('/api/user/:id/checkFriends/:recieverId', controller.getFriendRequestsById);
 
-  app.get('/api/user/:id', controller.getUserInfo)
-  app.get('/api/user', controller.findAll)
-  app.put('/api/user/:id', upload.single("image"), controller.update)
-  app.put('/api/user/img/:id', upload.single('image'), controller.changerImage)
 
-  app.get('/api/user/:id/suggest/random', controller.suggestRandomUsers);
-  app.put('/api/user/:iduser/updatePlayer', playerController.updatePlayerByUserId);
-  app.get('/api/user/:id/friend-requests', controller.getFriendRequests);
+
+
+
 
 }

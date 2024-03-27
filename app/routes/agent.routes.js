@@ -11,6 +11,6 @@ module.exports = function (app) {
   });
 
 
-  app.get('/api/agents', agentController.getAllAgents);
+  app.get('/api/allagents', agentController.getAllAgents);
 ;
 };

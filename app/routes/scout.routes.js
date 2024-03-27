@@ -1,5 +1,5 @@
 const { authJwt } = require('../middleware');
-const otherController = require('../controllers/other.controller');
+const scoutController = require('../controllers/scout.controller');
 
 const multer = require("multer");
 const path = require("path");
@@ -30,8 +30,7 @@ module.exports = function (app) {
     next();
   });
 
-  // Define the route for retrieving a player by userId
-  app.get('/api/other/:iduser', otherController.getOtherByUserId);
-  app.put('/api/other/:iduser',upload.single("image"), otherController.updateOther);
-  
+
+  app.get('/api/scouts', scoutController.getAllScouts);
+  app.put('/api/scouts/:iduser',upload.single("image"), scoutController.updateScouts);
 };

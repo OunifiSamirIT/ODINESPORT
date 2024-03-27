@@ -23,6 +23,7 @@ db.imageAlbum = require('./albumImages.model.js')(sequelize, Sequelize);
 
 
 db.camps = require('./camps.model.js')(sequelize, Sequelize);
+db.campsinscrit = require('./inscritcamps.js')(sequelize, Sequelize);
 db.imageAlbumcamps = require('./campsAlbum.js')(sequelize, Sequelize);
 //Event
 db.event = require('./event.model.js')(sequelize,Sequelize);
@@ -63,6 +64,8 @@ db.Reply = Reply;
 db.Commentaires = require('./commentaires.model.js')(sequelize, Sequelize);
 db.Article = require('./article.model.js')(sequelize, Sequelize);
 db.Likes = require('./likes.model.js')(sequelize, Sequelize);
+db.contact = require('./contact.model.js')(sequelize, Sequelize);
+db.search = require('./searchGlobal.js')(sequelize, Sequelize);
 
 
 
@@ -76,8 +79,12 @@ db.album.hasMany(db.imageAlbum , {
 db.camps.hasMany(db.imageAlbumcamps , {
   foreignKey : 'album_id',
 });
-
-
+// db.campsinscrit.hasMany(db.camps , {
+//   foreignKey : 'campsid',
+// });
+// db.campsinscrit.hasMany(db.user , {
+//   foreignKey : 'userid',
+// });
 
 
 //event relation
@@ -91,7 +98,10 @@ db.user.hasMany(db.imageEvent , {
 
 
 
-
+db.user.hasMany(db.friend_requests, { foreignKey: 'senderId', as: 'sentRequests' });
+db.user.hasMany(db.friend_requests, { foreignKey: 'receiverId', as: 'receivedRequests' });
+db.friend_requests.belongsTo(db.user, { foreignKey: 'senderId', as: 'sender' });
+db.friend_requests.belongsTo(db.user, { foreignKey: 'receiverId', as: 'receiver' });
 
 
 
