@@ -108,6 +108,7 @@ userRouter(app)
 const playerRouter = require('./app/routes/player.routes');
 const otherRouter = require('./app/routes/other.routes');
 const bodyParser = require('body-parser');
+
 playerRouter(app)
 otherRouter(app)
 
@@ -123,7 +124,7 @@ app.use(bodyParser.urlencoded({
   extended: true,
   parameterLimit:50000
 }));
-
+ 
 
 const PORT = process.env.PORT || 8088
 app.listen(PORT, '0.0.0.0', () => {
